@@ -1,3 +1,11 @@
+<!--
+
+  _
+ | \  _  ._ / _|_   _ _|_  _   _. |  ._ _      |  _      _  |      _  _   _|  _  |
+ |_/ (_) | |   |_  _>  |_ (/_ (_| |  | | | \/  | (_) \/ (/_ | \/  (_ (_) (_| (/_ o
+                                           /                  /
+
+-->
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -10,6 +18,9 @@
         <meta name="description" content="My memories frozen and captured within a frame.">
         <meta name="viewport" content="width=device-width">
         <meta name="format-detection" content="telephone=no">
+
+        <!-- For History API -->
+        <base href="/" />
 
         <!-- Own styles -->
         <link rel="stylesheet" href="css/styles.min.css">
@@ -49,21 +60,8 @@
         </header><!-- /header -->
 
         <main role="main">
-            <div id="app-slider" class="app-slider">
-                <div class="app-slider-image current">
-                    <img src="static/photos/tamm_image_01.jpg">
-                </div>
-                <div class="app-slider-image">
-                    <img src="static/photos/tamm_image_02.jpg">
-                </div>
-                <div class="app-slider-image">
-                    <img src="static/photos/tamm_image_03.jpg">
-                </div>
-                <div class="app-slider-image">
-                    <img src="static/photos/tamm_image_04.jpg">
-                </div>
-            </div>
-            <a href="#" class="app-slider-action next">Next</a>
+            <div id="app-slider" class="app-slider"></div>
+            <a href="#" class="app-slider-action next hidden">Next</a>
             <a href="#" class="app-slider-action prev hidden">Prev</a>
         </main><!-- /main -->
 

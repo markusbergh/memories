@@ -49,15 +49,15 @@ define([
 
 				});
 
-				if(typeof callback == 'Function') {
+				if(typeof callback == 'function') {
 					callback();
 				}
     		};
 
     		this.initialize = function() { };
 
-    		this.resizeHandler = function() {
-    			resizeHandler();
+    		this.resizeHandler = function(callback) {
+    			resizeHandler(callback);
     		};
 
     	};

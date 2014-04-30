@@ -32,17 +32,13 @@ define([
 
             this.initialize = function() {
             	coreImage = new CoreImage();
+                coreImage.resizeHandler();
 
-                // Set image size
-            	coreImage.resizeHandler(function() {
-                    // When image has size set initialize slider
-                    coreSlider = new CoreSlider();
-                    coreSlider.initialize();
+                coreSlider = new CoreSlider({});
+                coreSlider.init();
 
-                    // And navigation...
-                    coreNav = new CoreNav();
-                    coreNav.initialize();
-                });
+                coreNav = new CoreNav();
+                coreNav.initialize();
 
             	/**
             	 * Resize handler for image sizes
