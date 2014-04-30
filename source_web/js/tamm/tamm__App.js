@@ -31,10 +31,16 @@ define([
         	};
 
             this.initialize = function() {
+                var supportsTouch = 'ontouchstart' in window || !!navigator.msMaxTouchPoints;
+
             	coreImage = new CoreImage();
                 coreImage.resizeHandler();
 
-                coreSlider = new CoreSlider({});
+                coreSlider = new CoreSlider('', {
+                    supportsTouch: supportsTouch
+                });
+
+                // Initialize
                 coreSlider.init();
 
                 coreNav = new CoreNav();

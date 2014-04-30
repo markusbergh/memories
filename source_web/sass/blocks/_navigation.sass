@@ -9,14 +9,23 @@ $color: white
 	background: $color
 	border-radius: $button-size/14
 
+	@media only screen and (max-width: $break-mobile-landscape)
+		width: $button-size / 1.4
+		height: $button-size /  14
+
 #nav-toggle
 	position: absolute
-	left: 30px
+	top: 50px
+	left: 40px
 	z-index: 299
 	display: inline-block
 	transition: .3s
 	cursor: pointer
 	height: 30px
+
+	@media only screen and (max-width: $break-mobile-landscape)
+		top: 34px
+		left: 15px
 
 	&.close
 		span
@@ -27,6 +36,9 @@ $color: white
 				+transition(top $transition ease, transform $transition .4s ease)
 				top: 0
 				width: $button-size
+
+				@media only screen and (max-width: $break-mobile-landscape)
+					width: $button-size / 1.4
 
 			&:before
 				+transform(rotate3d(0, 0, 1, 45deg))
@@ -134,11 +146,14 @@ nav[role="navigation"]
 			margin: 0
 
 	a
-		+font-size(40px)
+		+font-size(44px)
 		text-transform: uppercase
-		font-weight: 500
+		font-weight: 300
 		letter-spacing: 0.15em
 		display: inline-block
+
+		@media only screen and (max-width: $break-mobile-landscape)
+			+font-size(32px)
 
 		&:after
 			margin: 0 auto

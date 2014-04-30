@@ -24,7 +24,7 @@ define([
 			this.$elem = $(elem);
 			this.options = options;
 			this.currentIndex = 0;
-			this.numImages = 7;
+			this.numImages = 10;
 
 			// This next line takes advantage of HTML5 data attributes
 			// to support customization of the plugin on a per-element
@@ -40,7 +40,8 @@ define([
 			defaults: {
 				$slider: $('.app-slider'),
 				$slider_action: $('.app-slider-action'),
-				$slider_image: null
+				$slider_image: null,
+				$spinner: $('.spinner-wrapper')
 			},
 
 			init: function() {
@@ -94,12 +95,19 @@ define([
 			load: function(callback, inverse) {
 				var self = this;
 
+				// Present spinner
+				self.config.$spinner.removeClass('hidden');
+
 				var image = new Image();
 
 				// On load we present image
 				image.onload = function() {
 					var coreImage = new CoreImage();
 					coreImage.resizeHandler();
+
+					// Hide spinner
+					self.config.$spinner.addClass('hidden');
+
 					if(typeof callback == 'function') {
 						callback.apply();
 					} else {
@@ -107,7 +115,7 @@ define([
 	                		self.config.$slider_image.transition({
 								opacity: 1,
 								scale: 1
-							}, 300, 'out');
+							}, 500, 'out');
 	                	});
 					}
 
@@ -115,7 +123,11 @@ define([
 				};
 
 				// Set source
-				image.src = '/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg';
+				if((self.currentIndex + 1) < 10) {
+					image.src = '/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg';
+				} else {
+					image.src = '/static/photos/tamm_image_' + (self.currentIndex + 1) + '.jpg';
+				}
 
 				self.config.$slider_image = $('<div />');
 
@@ -126,7 +138,10 @@ define([
 					});
 				} else {
 					self.config.$slider_image.css({
-						x: inverse ? '-100%' : '100%'
+						x: inverse ? '-100%' : '100%',
+						perspective: 1500,
+						rotateY: inverse ? -25 : 25,
+						scale: 0.5
 					});
 				}
 
@@ -188,8 +203,13 @@ define([
 	            	// Animate out current
 		            var $current = self.config.$slider.find('.app-slider-image').eq(0);
 
+		            console.log(self.config.supportsTouch);
+
 					$current.transition({
-						x: '-100%'
+						x: self.config.supportsTouch ? '-100%' : '0%',
+						perspective: 1000,
+						rotateY: self.config.supportsTouch ? 0 : 20,
+						scale: self.config.supportsTouch ? 1 : 1.2
 					}, 1000, 'in-out', function() {
 						$current.remove();
 
@@ -199,7 +219,9 @@ define([
 
 					// Animate in next
 					$current.next().transition({
-						x: '0'
+						x: '0',
+						scale: 1,
+						rotateY: 0
 					}, 700, 'in-out');
 	            });
 
@@ -218,7 +240,10 @@ define([
 	            	var $current = self.config.$slider.find('.app-slider-image').eq(0);
 
 	            	$current.transition({
-		                x: '100%'
+		                x: self.config.supportsTouch ? '100%' : '0%',
+						perspective: 1000,
+						rotateY: self.config.supportsTouch ? 0 : -20,
+						scale: self.config.supportsTouch ? 1 : 1.2
 		            }, 1000, 'in-out', function() {
 		                $current.remove();
 
@@ -227,7 +252,10 @@ define([
 		            });
 
 		            $current.next().transition({
-		                x: '0'
+		                x: '0%',
+		                scale: 1,
+		                rotateY: 0,
+		                perspective: 1000
 		            }, 700, 'in-out');
 
 	            }, true);

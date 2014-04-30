@@ -52,19 +52,32 @@ module.exports = function(grunt) {
         },
 
         /*
-         * JS minifier
+         * RequireJS optimization
          */
-        uglify: {
-            target: {
-                files: {
-                    '<%= pkg.directories.src_js %>/script.min.js': ['<%= pkg.directories.src_js %>/1984/modules/1984__utils.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/modules/1984__registerUser.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/modules/1984__map.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/modules/1984__reveal.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/modules/1984__svg.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/modules/1984__navigation.js',
-                                                                    '<%= pkg.directories.src_js %>/1984/1984.js',
-                                                                    '<%= pkg.directories.src_js %>/main.js', ]
+        requirejs: {
+            compile: {
+                options: {
+                    wrap: true,
+                    almond: true,
+                    appDir: '<%= pkg.directories.src_js %>',
+                    dir: '<%= pkg.directories.build_js %>',
+                    baseUrl: './',
+                    keepBuildDir: true,
+                    preserveLicenseComments: false,
+                    skipDirOptimize: false,
+                    normalizeDirDefines: "skip",
+                    removeCombined: true,
+                    mainConfigFile: '<%= pkg.directories.src_js %>/config.js',
+                    paths: {
+                        almond: 'vendor/almond-0.2.9'
+                    },
+                    modules: [
+                        {
+                            name: 'script-<%= pkg.version %>.min',
+                            include: ['almond', 'main'],
+                            create: true
+                        }
+                    ]
                 }
             }
         }
@@ -74,6 +87,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     grunt.registerTask('default', ['watch:sass']);
 };

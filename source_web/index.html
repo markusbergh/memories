@@ -16,7 +16,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>These are my memories</title>
         <meta name="description" content="My memories frozen and captured within a frame.">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width,minimal-ui">
         <meta name="format-detection" content="telephone=no">
 
         <!-- For History API -->
@@ -52,9 +52,9 @@
             </span>
             <nav role="navigation" class="hidden nav">
                 <ul>
+                    <li><a href="">About</a></li>
                     <li><a href="">Archive</a></li>
                     <li><a href="">Contact</a></li>
-                    <li><a href="">Other projects</a></li>
                 </ul>
             </nav>
         </header><!-- /header -->
@@ -68,9 +68,16 @@
         <footer role="contentinfo">
         </footer><!-- /footer -->
 
-        <!-- Require JS -->
-        <script data-config="js/config.js" src="js/config.js"></script>
-        <script data-main="js/main.js" src="js/vendor/require-2.1.11.min.js"></script>
+        <div class="spinner-wrapper hidden">
+            <div class="spinner-container">
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+        </div><!-- /spinner -->
+
+        <script type="text/javascript" src="js/script-1.0.0.min.js"></script>
 
     </body>
 </html>

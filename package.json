@@ -13,6 +13,7 @@
     "src": "source_web",
     "src_css": "source_web/css",
     "src_sass": "source_web/sass",
-    "src_js": "source_web/js"
+    "src_js": "source_web/js",
+    "build_js": "source_web/build"
   }
 }

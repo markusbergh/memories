@@ -10,18 +10,33 @@ header[role="banner"]
 		z-index: 99
 		margin: 50px 0 0 0
 
+		@media only screen and (max-width: $break-mobile-landscape)
+			margin: 30px 20px 0 0
+			display: inline-block
+			width: auto
+			float: right
+			text-align: right
+			+font-size(18px)
+
 	.slogan
 		+font-size(12px)
 		margin: 10px 0 0 0
 		display: block
 		letter-spacing: 0.4em
 
+		@media only screen and (max-width: $break-mobile-landscape)
+			letter-spacing: 0.2em
+			margin: -2px 0 0 0
+
 	.years
 		+font-size(14px)
 		position: absolute
-		right: 30px
-		top: 70px
+		right: 40px
+		top: 65px
 		z-index: 99
 		font-weight: 500
 		display: block
 		letter-spacing: 0.2em
+
+		@media only screen and (max-width: $break-mobile-landscape)
+			display: none
