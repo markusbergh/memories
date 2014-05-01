@@ -22,8 +22,6 @@ module.exports = function(grunt) {
                 '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
                 '* Copyright (c) <%= grunt.template.today("yyyy") %> ',
 
-
-
         /*
          * Watch SASS directories
          */

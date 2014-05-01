@@ -1,6 +1,7 @@
 $button-size: 3rem
 $transition: .2s // increase this to see the transformations in slow-motion
 $color: white
+$color_inverted: black
 
 =line
 	display: inline-block
@@ -17,11 +18,12 @@ $color: white
 	position: absolute
 	top: 50px
 	left: 40px
-	z-index: 299
+	z-index: 499
 	display: inline-block
 	transition: .3s
 	cursor: pointer
 	height: 30px
+	opacity: 0
 
 	@media only screen and (max-width: $break-mobile-landscape)
 		top: 34px
@@ -33,7 +35,7 @@ $color: white
 			background: transparent
 
 			&:before, &:after
-				+transition(top $transition ease, transform $transition .4s ease)
+				+transition(top $transition ease, transform $transition .4s ease, background 2s ease)
 				top: 0
 				width: $button-size
 
@@ -45,6 +47,12 @@ $color: white
 
 			&:after
 				+transform(rotate3d(0, 0, 1, -45deg))
+
+		&.inverted
+			span
+				&:before,
+				&:after
+					background: $color_inverted
 
 	span
 		@include line
@@ -120,14 +128,17 @@ nav[role="navigation"]
 	left: 0
 	width: 100%
 	height: 100%
-	z-index: 199
-	background: rgba(0, 0, 0, 0.75)
+	z-index: 299
+	background: rgba(0, 0, 0, 0.8)
 	display: table
 	opacity: 1
 
 	+transition(opacity 0.3s ease-out)
 
 	&.hidden
+		display: none
+
+	&.visuallyhidden
 		opacity: 0
 		pointer-events: none
 
@@ -146,7 +157,7 @@ nav[role="navigation"]
 			margin: 0
 
 	a
-		+font-size(44px)
+		+font-size(40px)
 		text-transform: uppercase
 		font-weight: 300
 		letter-spacing: 0.15em
@@ -154,6 +165,7 @@ nav[role="navigation"]
 
 		@media only screen and (max-width: $break-mobile-landscape)
 			+font-size(32px)
+			font-weight: 300
 
 		&:after
 			margin: 0 auto

@@ -7,8 +7,9 @@ header[role="banner"]
 		text-transform: uppercase
 		letter-spacing: 0.1em
 		font-weight: 600
-		z-index: 99
+		z-index: 199
 		margin: 50px 0 0 0
+		opacity: 0
 
 		@media only screen and (max-width: $break-mobile-landscape)
 			margin: 30px 20px 0 0
@@ -28,15 +29,25 @@ header[role="banner"]
 			letter-spacing: 0.2em
 			margin: -2px 0 0 0
 
-	.years
+	.years-of-memories
 		+font-size(14px)
 		position: absolute
 		right: 40px
 		top: 65px
-		z-index: 99
+		z-index: 199
 		font-weight: 500
 		display: block
 		letter-spacing: 0.2em
+		opacity: 0
 
 		@media only screen and (max-width: $break-mobile-landscape)
 			display: none
+
+	#logo-canvas
+		position: absolute
+		top: 4px
+		left: 50%
+		margin-left: -225px
+		width: 450px
+		height: 48px
+		z-index: 99

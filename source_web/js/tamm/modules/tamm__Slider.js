@@ -11,10 +11,11 @@
 define([
 		'jquery',
 		'transit',
+		'tamm/utils/tamm__PubSub',
 		'./tamm__Image'
 	],
 
-    function($, transit, CoreImage) {
+    function($, transit, PubSub, CoreImage) {
 
 		/*
 		 * Constructor
@@ -40,6 +41,8 @@ define([
 			defaults: {
 				$slider: $('.app-slider'),
 				$slider_action: $('.app-slider-action'),
+				$slider_action_next: $('.app-slider-action.next'),
+				$slider_action_prev: $('.app-slider-action.prev'),
 				$slider_image: null,
 				$spinner: $('.spinner-wrapper')
 			},
@@ -60,33 +63,33 @@ define([
     			 */
     			self.addListener();
 
+    			/**
+    			 * Load SVG for pagination
+    			 */
+    			self.loadSVG();
+
 				return self;
 			},
 
 			getURL: function() {
 				var self = this;
 
+				// Get photo index from url
 				var url = document.URL;
 				var lastPart = url.split("/").pop();
 
+				// If index wasn't found we set a default one
 				if(lastPart.length == 0) {
-                	history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
+					history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
 				} else {
+					// Otherwise set index from url
 					self.currentIndex = parseInt(lastPart, 10) - 1;
 				}
 
-				if(self.currentIndex > 0) {
-                    $('.app-slider-action.prev').removeClass('hidden');
-                } else {
-                    $('.app-slider-action.prev').addClass('hidden');
-                }
+				// Set pagination
+				self.setPagination();
 
-                if((self.currentIndex + 1) == self.numImages) {
-                    $('.app-slider-action.next').addClass('hidden');
-                } else {
-                    $('.app-slider-action.next').removeClass('hidden');
-                }
-
+                // Load image
 				self.load();
 
 				return self;
@@ -98,45 +101,56 @@ define([
 				// Present spinner
 				self.config.$spinner.removeClass('hidden');
 
+				// Create new image
 				var image = new Image();
 
-				// On load we present image
+				// On load we animate image
 				image.onload = function() {
+
+					// Do some size handling
 					var coreImage = new CoreImage();
 					coreImage.resizeHandler();
 
 					// Hide spinner
 					self.config.$spinner.addClass('hidden');
 
+					// If call was passed, use it
 					if(typeof callback == 'function') {
 						callback.apply();
 					} else {
+						// Otherwise just do some size handling and fade in
 	                	coreImage.resizeHandler(function() {
 	                		self.config.$slider_image.transition({
 								opacity: 1,
 								scale: 1
-							}, 500, 'out');
+							}, 500, 'out', function() {
+
+								// Dispatch event
+								PubSub.publish('/tamm/initial/image/faded');
+							});
 	                	});
 					}
 
-					history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
 				};
 
-				// Set source
+				// Set source according to index, this can probably be prettier
 				if((self.currentIndex + 1) < 10) {
 					image.src = '/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg';
 				} else {
 					image.src = '/static/photos/tamm_image_' + (self.currentIndex + 1) + '.jpg';
 				}
 
+				// Create image container
 				self.config.$slider_image = $('<div />');
 
 				if(typeof callback != 'function') {
+					// Style for initial image
 					self.config.$slider_image.css({
 						opacity: 0,
 						scale: 1.3
 					});
 				} else {
+					// Style for paginating images
 					self.config.$slider_image.css({
 						x: inverse ? '-100%' : '100%',
 						perspective: 1500,
@@ -145,11 +159,32 @@ define([
 					});
 				}
 
+				// Add image to slider
 				self.config.$slider.append(
 					self.config.$slider_image.append(
 						image
 					).addClass('app-slider-image')
 				);
+
+				return self;
+			},
+
+			setPagination: function() {
+				var self = this;
+
+				// Some logic with previous button
+				if(self.currentIndex > 0) {
+                    self.config.$slider_action_prev.removeClass('hidden');
+                } else {
+                    self.config.$slider_action_prev.addClass('hidden');
+                }
+
+                // Some logic with next button
+                if((self.currentIndex + 1) == self.numImages) {
+                    self.config.$slider_action_next.addClass('hidden');
+                } else {
+                    self.config.$slider_action_next.removeClass('hidden');
+                }
 
 				return self;
 			},
@@ -162,26 +197,19 @@ define([
 
     				var $action = $(this);
 
+    				// If slider is not running
     				if($('.slider-is-running').length <= 0) {
+    					// Check which navigation was clicked
     					if($action.hasClass('prev')) {
 							self.prev();
 						} else {
 							self.next();
 						}
 
-	                    if(self.currentIndex > 0) {
-	                        $('.app-slider-action.prev').removeClass('hidden');
-	                    } else {
-	                        $('.app-slider-action.prev').addClass('hidden');
-	                    }
+						// Set pagination
+						self.setPagination();
 
-	                    if((self.currentIndex + 1) == self.numImages) {
-	                        $('.app-slider-action.next').addClass('hidden');
-	                    } else {
-	                        $('.app-slider-action.next').removeClass('hidden');
-	                    }
-
-	                    // Update url
+	                    // Update url to current image index
 	                    history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
     				}
     			});
@@ -198,26 +226,27 @@ define([
 	            // Set class for preventing double click
 	            $('html').addClass('slider-is-running');
 
-	            // Load next image
+	            // Load next image with callback
 	            self.load(function() {
-	            	// Animate out current
+
+	            	// Animate out current image
 		            var $current = self.config.$slider.find('.app-slider-image').eq(0);
 
-		            console.log(self.config.supportsTouch);
-
+		            // Animation is different for touch devices
 					$current.transition({
 						x: self.config.supportsTouch ? '-100%' : '0%',
 						perspective: 1000,
-						rotateY: self.config.supportsTouch ? 0 : 20,
-						scale: self.config.supportsTouch ? 1 : 1.2
+						rotateY: self.config.supportsTouch ? 0 : 35,
+						scale: self.config.supportsTouch ? 1 : 0.5
 					}, 1000, 'in-out', function() {
+						// When done, remove image
 						$current.remove();
 
 						// Enable pagination
 						$('html').removeClass('slider-is-running');
 		            });
 
-					// Animate in next
+					// Animate in next image
 					$current.next().transition({
 						x: '0',
 						scale: 1,
@@ -236,14 +265,18 @@ define([
 	            // Set class for preventing double click
 	            $('html').addClass('slider-is-running');
 
+	            // Load image with callback
 	            self.load(function() {
+
+	            	// Animate out current image
 	            	var $current = self.config.$slider.find('.app-slider-image').eq(0);
 
+					// Animation is different for touch devices
 	            	$current.transition({
 		                x: self.config.supportsTouch ? '100%' : '0%',
 						perspective: 1000,
-						rotateY: self.config.supportsTouch ? 0 : -20,
-						scale: self.config.supportsTouch ? 1 : 1.2
+						rotateY: self.config.supportsTouch ? 0 : -35,
+						scale: self.config.supportsTouch ? 1 : 0.5
 		            }, 1000, 'in-out', function() {
 		                $current.remove();
 
@@ -251,6 +284,7 @@ define([
 						$('html').removeClass('slider-is-running');
 		            });
 
+	            	// Animate in next image
 		            $current.next().transition({
 		                x: '0%',
 		                scale: 1,
@@ -258,10 +292,24 @@ define([
 		                perspective: 1000
 		            }, 700, 'in-out');
 
-	            }, true);
+	            }, true); // Inverted pagination
 
 	            return self;
-			}
+			},
+
+			loadSVG: function() {
+				var self = this;
+
+				return self;
+			},
+
+			onHoverPagination: function() {
+				var self = this;
+
+				return self;
+			},
+
+			outHoverPagination: function() {}
 		};
 
 		/*
