@@ -26,6 +26,8 @@ define([
 			this.options = options;
 			this.currentIndex = 0;
 			this.numImages = 10;
+			this.coreImage = new CoreImage();
+			this.onImageLoaded = null;
 
 			// This next line takes advantage of HTML5 data attributes
 			// to support customization of the plugin on a per-element
@@ -44,7 +46,8 @@ define([
 				$slider_action_next: $('.app-slider-action.next'),
 				$slider_action_prev: $('.app-slider-action.prev'),
 				$slider_image: null,
-				$spinner: $('.spinner-wrapper')
+				$preloader: $('.preloader-wrapper'),
+                $progress: $('.progress')
 			},
 
 			init: function() {
@@ -86,9 +89,6 @@ define([
 					self.currentIndex = parseInt(lastPart, 10) - 1;
 				}
 
-				// Set pagination
-				self.setPagination();
-
                 // Load image
 				self.load();
 
@@ -98,28 +98,54 @@ define([
 			load: function(callback, inverse) {
 				var self = this;
 
-				// Present spinner
-				self.config.$spinner.removeClass('hidden');
+				if(this.onImageLoaded) {
+					PubSub.unsubscribe(this.onImageLoaded);
+				}
 
-				// Create new image
-				var image = new Image();
+				this.onImageLoaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
 
-				// On load we animate image
-				image.onload = function() {
+					// Create image container
+					self.config.$slider_image = $('<div />');
 
-					// Do some size handling
-					var coreImage = new CoreImage();
-					coreImage.resizeHandler();
+					if(typeof callback != 'function') {
+						// Style for initial image
+						self.config.$slider_image.css({
+							opacity: 0,
+							scale: 1.3
+						});
 
-					// Hide spinner
-					self.config.$spinner.addClass('hidden');
+						self.config.$preloader.css({ height: 0 });
+						self.config.$preloader.transition({
+							opacity: 0
+						}, 600, function() {
+							self.config.$preloader.removeAttr('style');
+						});
+
+					} else {
+						// Style for paginating images
+						self.config.$slider_image.css({
+							x: inverse ? '-100%' : '100%',
+							perspective: 1500,
+							rotateY: inverse ? -25 : 25,
+							scale: 0.5
+						});
+					}
+
+					// Add image to slider
+					self.config.$slider.append(
+						self.config.$slider_image.append(
+							image
+						).addClass('app-slider-image')
+					);
+
+					self.coreImage.resizeHandler();
 
 					// If call was passed, use it
 					if(typeof callback == 'function') {
 						callback.apply();
 					} else {
 						// Otherwise just do some size handling and fade in
-	                	coreImage.resizeHandler(function() {
+	                	self.coreImage.resizeHandler(function() {
 	                		self.config.$slider_image.transition({
 								opacity: 1,
 								scale: 1
@@ -127,44 +153,37 @@ define([
 
 								// Dispatch event
 								PubSub.publish('/tamm/initial/image/faded');
+
+								// Set pagination
+								self.setPagination();
 							});
 	                	});
 					}
+				});
 
-				};
+				if(typeof callback == 'function') {
+					self.config.$preloader.removeAttr('style');
+					self.config.$progress.removeAttr('style');
+				} else {
+					self.config.$preloader.css({
+						top: 0,
+						bottom: 'auto',
+						height: '100%'
+					});
+
+					self.config.$progress.css({
+						top: 0,
+						bottom: 'auto',
+						height: '100%'
+					});
+				}
 
 				// Set source according to index, this can probably be prettier
 				if((self.currentIndex + 1) < 10) {
-					image.src = '/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg';
+					this.coreImage.load('/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg');
 				} else {
-					image.src = '/static/photos/tamm_image_' + (self.currentIndex + 1) + '.jpg';
+					this.coreImage.load('/static/photos/tamm_image_' + (self.currentIndex + 1) + '.jpg');
 				}
-
-				// Create image container
-				self.config.$slider_image = $('<div />');
-
-				if(typeof callback != 'function') {
-					// Style for initial image
-					self.config.$slider_image.css({
-						opacity: 0,
-						scale: 1.3
-					});
-				} else {
-					// Style for paginating images
-					self.config.$slider_image.css({
-						x: inverse ? '-100%' : '100%',
-						perspective: 1500,
-						rotateY: inverse ? -25 : 25,
-						scale: 0.5
-					});
-				}
-
-				// Add image to slider
-				self.config.$slider.append(
-					self.config.$slider_image.append(
-						image
-					).addClass('app-slider-image')
-				);
 
 				return self;
 			},
