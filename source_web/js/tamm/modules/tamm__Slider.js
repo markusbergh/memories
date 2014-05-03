@@ -12,7 +12,7 @@ define([
 		'jquery',
 		'transit',
 		'tamm/utils/tamm__PubSub',
-		'./tamm__Image'
+		'tamm/modules/tamm__Image'
 	],
 
     function($, transit, PubSub, CoreImage) {
@@ -71,6 +71,11 @@ define([
     			 */
     			self.loadSVG();
 
+    			/**
+    			 * Keyboard event
+    			 */
+    			self.addKeyboard();
+
 				return self;
 			},
 
@@ -114,12 +119,16 @@ define([
 							scale: 1.3
 						});
 
+						// Animate out preloader
 						self.config.$preloader.css({ height: 0 });
 						self.config.$preloader.transition({
 							opacity: 0
 						}, 600, function() {
 							self.config.$preloader.removeAttr('style');
 						});
+
+						// Set class
+						$('html').addClass('loaded-and-ready');
 
 					} else {
 						// Style for paginating images
@@ -205,6 +214,9 @@ define([
                     self.config.$slider_action_next.removeClass('hidden');
                 }
 
+                // Update url to current image index
+                history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
+
 				return self;
 			},
 
@@ -220,20 +232,40 @@ define([
     				if($('.slider-is-running').length <= 0) {
     					// Check which navigation was clicked
     					if($action.hasClass('prev')) {
-							self.prev();
+    						if(self.currentIndex > 0) {
+								self.prev();
+							}
 						} else {
-							self.next();
+							if((self.currentIndex + 1) < self.numImages) {
+								self.next();
+							}
 						}
 
 						// Set pagination
 						self.setPagination();
-
-	                    // Update url to current image index
-	                    history.pushState({}, '', '/photos/' + (self.currentIndex + 1));
     				}
     			});
 
     			return self;
+			},
+
+			addKeyboard: function() {
+				var self = this;
+
+				$('body').keydown(function(e) {
+					if($('.slider-is-running').length <= 0) {
+
+						if(e.keyCode == 37) {
+							self.prev();
+						} else if(e.keyCode == 39) {
+							self.next();
+						}
+
+						self.setPagination();
+					}
+				});
+
+				return self;
 			},
 
 			next: function() {

@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script>
+
+            var progressBar;
+
+            function showProgressBar()
+            {
+                progressBar = document.createElement("progress");
+                progressBar.value = 0;
+                progressBar.max = 100;
+                document.body.appendChild(progressBar);
+            }
+
+            function updateProgressBar(e)
+            {
+                if (e.lengthComputable)
+                    progressBar.value = e.loaded / e.total * 100;
+                else
+                    progressBar.removeAttribute("value");
+            }
+
+            function hideProgressBar()
+            {
+                document.body.removeChild(progressBar);
+            }
+
+        </script>
+    </head>
+    <body>
+        <img id="image"
+             src="http://thesearemymemories.markusbergh.se/static/photos/tamm_image_01.jpg"
+             onloadstart="showProgressBar()"
+             onprogress="updateProgressBar(event)"
+             onloadend="hideProgressBar()"/>
+    </body>
+</html>

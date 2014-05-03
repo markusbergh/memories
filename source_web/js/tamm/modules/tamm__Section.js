@@ -11,10 +11,12 @@
 define([
 		'jquery',
 		'transit',
-		'../utils/tamm__PubSub'
+		'tamm/utils/tamm__PubSub',
+		'tamm/modules/tamm__About',
+		'tamm/modules/tamm__Archive'
 	],
 
-    function($, transit, PubSub) {
+    function($, transit, PubSub, CoreAbout, CoreArchive) {
 
 		/*
 		 * Constructor
@@ -39,7 +41,8 @@ define([
 				$app: $('main'),
 				$section: $('<div />'),
 				$section_content_wrapper: $('<div />'),
-				$section_content: $('<div />')
+				$section_content: $('<div />'),
+				$section_data: null
 			},
 
 			init: function() {
@@ -65,14 +68,40 @@ define([
 					})
 				);
 
-				// Add some dummy content
-				var title = $('<h2 />');
-				var description = $('<p>This is where you can see what I see, and what I capture as a moment in my life. Beautiful thrilling moments. And these are my memories.</p><p>Enjoy.</p>');
+				switch(self.config.section) {
+					case 'about':
+						self.config.$section_data = new CoreAbout('', {
+							onReady: function(data) {
+								self.onSectionReady(data);
+							}
+						}).init();
+
+						self.config.$section_content_wrapper.addClass('about');
+						self.config.$section_content.addClass('about');
+					break;
+					case 'archive':
+						self.config.$section_data = new CoreArchive('', {
+							onReady: function(data) {
+								self.onSectionReady(data);
+							}
+						}).init();
+
+						self.config.$section_content_wrapper.addClass('archive');
+						self.config.$section_content.addClass('archive');
+					break;
+				}
+
+				self.config.$section_data.create();
+
+				return self;
+			},
+
+			onSectionReady: function(data) {
+				var self = this;
 
 				self.config.$section_content_wrapper.append(
 					self.config.$section_content.empty().append(
-						title.text('These are my memories'),
-						description
+						data
 					).addClass('section-content')
 				).addClass('section-content-wrapper');
 
@@ -85,6 +114,10 @@ define([
 				self.config.$section.transition({
 					opacity: 1
 				}, 700);
+
+				if(self.config.$section_data.show) {
+					self.config.$section_data.show();
+				}
 
 				return self;
 			},

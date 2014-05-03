@@ -74,9 +74,9 @@ define([
                     coreTransition.hide();
                 });
 
-                PubSub.subscribe('/tamm/section/create', function(e) {
+                PubSub.subscribe('/tamm/section/create', function(section) {
                     coreSection = new CoreSection('', {
-                        section: e
+                        section: section
                     }).init();
                 });
 

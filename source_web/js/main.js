@@ -20,7 +20,7 @@ require(['jquery', './tamm/tamm__App'], function($, CoreApp) {
 		var app = new CoreApp().initialize();
 
 		// Add class for script support
-		$('html').removeClass('no-js').addClass('loaded-and-ready js');
+		$('html').removeClass('no-js').addClass('js');
 	});
 
 });

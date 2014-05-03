@@ -76,6 +76,8 @@ define([
 
                     // Publish event(s)
                     PubSub.publish('/tamm/transition/show');
+
+                    // Create sction-
                     PubSub.publish('/tamm/section/create', [$nav_item.data('section')], this);
                 });
 
