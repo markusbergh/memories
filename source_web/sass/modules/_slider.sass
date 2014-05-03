@@ -1,6 +1,6 @@
 .app-slider,
 .app-slider-image
-	position: fixed
+	position: absolute
 	top: 0
 	left: 0
 	width: 100%
@@ -9,9 +9,7 @@
 	-webkit-backface-visibility: hidden
 
 .app-slider-image
-	position: absolute
 	z-index: 99
-
 	img
 		position: absolute
 		top: 0
@@ -20,6 +18,7 @@
 
 
 .app-slider-action
+	display: block
 	position: absolute
 	top: 50%
 	margin-top: -20px
@@ -29,14 +28,19 @@
 	text-indent: -9999px
 	left: 10px
 	z-index: 199
+	-webkit-backface-visibility: hidden
 
 	+transition(opacity 0.3s ease-in-out, background-position-x 0.3s ease-in-out)
+
+	.touch &
+		&:hover
+			background-position-x: 20px
 
 	&:hover
 		background-position-x: 10px
 
 	@media only screen and (max-width: $break-mobile-landscape)
-		left: 15px
+		left: -5px
 
 	&.hidden
 		opacity: 0
@@ -48,4 +52,4 @@
 		+transform(rotate(180deg))
 
 		@media only screen and (max-width: $break-mobile-landscape)
-			right: 15px
+			right: -5px

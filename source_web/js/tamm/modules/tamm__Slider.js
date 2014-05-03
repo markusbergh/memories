@@ -11,11 +11,12 @@
 define([
 		'jquery',
 		'transit',
+		'tamm/tamm__Model',
 		'tamm/utils/tamm__PubSub',
 		'tamm/modules/tamm__Image'
 	],
 
-    function($, transit, PubSub, CoreImage) {
+    function($, transit, Model, PubSub, CoreImage) {
 
 		/*
 		 * Constructor
@@ -28,6 +29,7 @@ define([
 			this.numImages = 10;
 			this.coreImage = new CoreImage();
 			this.onImageLoaded = null;
+			this.isLoadedFromArchive = false;
 
 			// This next line takes advantage of HTML5 data attributes
 			// to support customization of the plugin on a per-element
@@ -42,12 +44,15 @@ define([
 		Slider.prototype = {
 			defaults: {
 				$slider: $('.app-slider'),
+				$slider_image_wrapper: $('.app-slider-image-wrapper'),
 				$slider_action: $('.app-slider-action'),
 				$slider_action_next: $('.app-slider-action.next'),
 				$slider_action_prev: $('.app-slider-action.prev'),
 				$slider_image: null,
+				$slider_image_current: null,
 				$preloader: $('.preloader-wrapper'),
-                $progress: $('.progress')
+                $progress: $('.progress'),
+                $preloader_text: $('.preloader-text')
 			},
 
 			init: function() {
@@ -67,14 +72,16 @@ define([
     			self.addListener();
 
     			/**
-    			 * Load SVG for pagination
-    			 */
-    			self.loadSVG();
-
-    			/**
     			 * Keyboard event
     			 */
     			self.addKeyboard();
+
+    			PubSub.subscribe('/tamm/archive/image/load', function(index) {
+    				self.isLoadedFromArchive = true;
+
+    				self.currentIndex = parseInt(index, 10);
+    				self.load();
+    			});
 
 				return self;
 			},
@@ -113,6 +120,15 @@ define([
 					self.config.$slider_image = $('<div />');
 
 					if(typeof callback != 'function') {
+						if(self.isLoadedFromArchive) {
+							self.isLoadedFromArchive = false;
+
+							self.config.$slider_image_current = $('.app-slider-image');
+							self.config.$slider_image_current.remove();
+
+							PubSub.publish('/tamm/archive/hide');
+						}
+
 						// Style for initial image
 						self.config.$slider_image.css({
 							opacity: 0,
@@ -125,12 +141,19 @@ define([
 							opacity: 0
 						}, 600, function() {
 							self.config.$preloader.removeAttr('style');
+							self.config.$preloader.addClass('top');
+							self.config.$progress.addClass('top');
 						});
 
 						// Set class
 						$('html').addClass('loaded-and-ready');
 
 					} else {
+						self.config.$slider_image_current = $('.app-slider-image');
+						if(self.config.$slider_image_current.length > 0) {
+
+						}
+
 						// Style for paginating images
 						self.config.$slider_image.css({
 							x: inverse ? '-100%' : '100%',
@@ -142,9 +165,11 @@ define([
 
 					// Add image to slider
 					self.config.$slider.append(
-						self.config.$slider_image.append(
-							image
-						).addClass('app-slider-image')
+						self.config.$slider_image_wrapper.append(
+							self.config.$slider_image.append(
+								image
+							).addClass('app-slider-image')
+						)
 					);
 
 					self.coreImage.resizeHandler();
@@ -174,25 +199,31 @@ define([
 					self.config.$preloader.removeAttr('style');
 					self.config.$progress.removeAttr('style');
 				} else {
-					self.config.$preloader.css({
-						top: 0,
-						bottom: 'auto',
-						height: '100%'
-					});
+					if(!self.isLoadedFromArchive) {
+						self.config.$preloader.css({
+							top: 0,
+							bottom: 'auto',
+							height: '100%'
+						});
 
-					self.config.$progress.css({
-						top: 0,
-						bottom: 'auto',
-						height: '100%'
-					});
+						self.config.$progress.css({
+							top: 0,
+							bottom: 'auto',
+							height: '100%'
+						});
+
+						self.config.$preloader_text.css({
+							opacity: 0
+						}).transition({
+							opacity: 1
+						}, 500);
+					}
 				}
 
-				// Set source according to index, this can probably be prettier
-				if((self.currentIndex + 1) < 10) {
-					this.coreImage.load('/static/photos/tamm_image_0' + (self.currentIndex + 1) + '.jpg');
-				} else {
-					this.coreImage.load('/static/photos/tamm_image_' + (self.currentIndex + 1) + '.jpg');
-				}
+				var images = Model.get();
+				this.coreImage.load(
+					images[self.currentIndex].image
+				);
 
 				return self;
 			},
@@ -285,7 +316,7 @@ define([
 
 		            // Animation is different for touch devices
 					$current.transition({
-						x: self.config.supportsTouch ? '-100%' : '0%',
+						x: self.config.supportsTouch ? '-100%' : '0',
 						perspective: 1000,
 						rotateY: self.config.supportsTouch ? 0 : 35,
 						scale: self.config.supportsTouch ? 1 : 0.5
@@ -325,7 +356,7 @@ define([
 					// Animation is different for touch devices
 	            	$current.transition({
 		                x: self.config.supportsTouch ? '100%' : '0%',
-						perspective: 1000,
+		                perspective: 1000,
 						rotateY: self.config.supportsTouch ? 0 : -35,
 						scale: self.config.supportsTouch ? 1 : 0.5
 		            }, 1000, 'in-out', function() {
@@ -346,21 +377,7 @@ define([
 	            }, true); // Inverted pagination
 
 	            return self;
-			},
-
-			loadSVG: function() {
-				var self = this;
-
-				return self;
-			},
-
-			onHoverPagination: function() {
-				var self = this;
-
-				return self;
-			},
-
-			outHoverPagination: function() {}
+			}
 		};
 
 		/*

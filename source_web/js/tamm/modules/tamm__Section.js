@@ -13,10 +13,11 @@ define([
 		'transit',
 		'tamm/utils/tamm__PubSub',
 		'tamm/modules/tamm__About',
-		'tamm/modules/tamm__Archive'
+		'tamm/modules/tamm__Archive',
+		'tamm/modules/tamm__Contact'
 	],
 
-    function($, transit, PubSub, CoreAbout, CoreArchive) {
+    function($, transit, PubSub, CoreAbout, CoreArchive, CoreContact) {
 
 		/*
 		 * Constructor
@@ -88,6 +89,17 @@ define([
 
 						self.config.$section_content_wrapper.addClass('archive');
 						self.config.$section_content.addClass('archive');
+					break;
+					case 'contact':
+
+						self.config.$section_data = new CoreContact('', {
+							onReady: function(data) {
+								self.onSectionReady(data);
+							}
+						}).init();
+
+						self.config.$section_content_wrapper.addClass('contact');
+						self.config.$section_content.addClass('contact');
 					break;
 				}
 

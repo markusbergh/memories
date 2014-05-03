@@ -1,6 +1,6 @@
 /*
  * T A M M - Navigation
- * This file contains the navigation for site
+ * This file contains the navigation
  *
  * Usage: var nav = new Nav(elem, {});
  *
@@ -56,6 +56,10 @@ define([
                 // Add listeners
                 self.addListenerForNavItems();
                 self.addListenerForToggle();
+
+                PubSub.subscribe('/tamm/navigation/reset', function() {
+                    self.reset();
+                });
 
 				return self;
 			},
@@ -149,14 +153,33 @@ define([
 
                 self.config.$nav_toggle.unbind();
                 self.config.$nav_toggle.on('click', function(e) {
+
                     // Default style for toggle
                     self.config.$nav_toggle.removeClass('inverted');
 
                     // Default toggle action
                     self.addListenerForToggle();
 
+                    // Publish event
                     PubSub.publish('/tamm/section/hide');
                 });
+
+                return self;
+            },
+
+            reset: function() {
+                var self = this;
+
+
+                // Default toggle action
+                self.addListenerForToggle();
+
+                // Default color and state
+                self.config.$nav_toggle.removeClass('close');
+                self.config.$nav_toggle.removeClass('inverted');
+
+                // Hide menu
+                self.config.$nav.addClass('visuallyhidden');
 
                 return self;
             },

@@ -1,6 +1,6 @@
 /*
- * Image
- * This file contains the image handling for site
+ * T A M M - Image
+ * This file contains the image handling
  *
  * Author
  * Markus Bergh
@@ -42,17 +42,17 @@ define([
                       if(containerAspect < imageAspect) {
                         $img.css({
                             width: 'auto',
-                      height: containerH,
-                      top:0,
-                      left:-(containerH*imageAspect-containerW)/2
-                          });
+                            height: containerH,
+                            top: 0,
+                            left: -(containerH*imageAspect-containerW)/2
+                        });
                       } else {
                         $img.css({
                             width: containerW,
-                      height: 'auto',
-                      top:-(containerW/imageAspect-containerH)/2,
-                      left:0
-                          });
+                            height: 'auto',
+                            top: -(containerW/imageAspect-containerH)/2,
+                            left: 0
+                        });
                       }
                 });
 
@@ -126,29 +126,6 @@ define([
               this.onLoad = function() {
                   image = new Image();
                   image.src = "data:image/jpeg;base64," + self.base64Encode(request.responseText);
-
-                  var canvas = document.createElement("canvas");
-                      canvas.width = image.width;
-                      canvas.height = image.height;
-                      colorSum = 0;
-
-                  var ctx = canvas.getContext("2d");
-                  ctx.drawImage(image,0,0);
-
-                  var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-                  var data = imageData.data;
-                  var r,g,b,avg;
-
-                  for(var x = 0, len = data.length; x < len; x+=4) {
-                      r = data[x];
-                      g = data[x+1];
-                      b = data[x+2];
-
-                      avg = Math.floor((r+g+b)/3);
-                      colorSum += avg;
-                  }
-
-                  var brightness = Math.floor(colorSum / (image.width*image.height));
               };
 
               this.onLoadEnded = function() {

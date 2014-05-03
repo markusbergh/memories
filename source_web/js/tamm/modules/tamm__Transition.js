@@ -1,6 +1,6 @@
 /*
- * Transition
- * This file contains the image handling for site
+ * T A M M - Transition
+ * This file contains transition animation
  *
  * Usage: var transition = new Transition();
  *

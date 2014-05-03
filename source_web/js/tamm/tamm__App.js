@@ -16,10 +16,11 @@ define([
         'tamm/modules/tamm__Transition',
         'tamm/modules/tamm__Section',
         'tamm/modules/tamm__Slider',
-		'tamm/modules/tamm__Nav'
+		'tamm/modules/tamm__Nav',
+        'tamm/tamm__Model'
 	],
 
-    function($, Snap, PubSub, CoreUtils, CoreImage, CoreTransition, CoreSection, CoreSlider, CoreNav) {
+    function($, Snap, PubSub, CoreUtils, CoreImage, CoreTransition, CoreSection, CoreSlider, CoreNav, Model) {
 
         var TAMMain = function() {
 
@@ -40,52 +41,60 @@ define([
 
                 // Touch support check
                 var supportsTouch = 'ontouchstart' in window || !!navigator.msMaxTouchPoints;
+                if(supportsTouch) {
+                    $('html').addClass('touch');
+                }
 
-                // Image size handling
-            	coreImage = new CoreImage();
-                coreImage.resizeHandler();
+                // Get application data
+                Model.load(function() {
 
-                // Image slider
-                coreSlider = new CoreSlider('', {
-                    supportsTouch: supportsTouch
-                }).init();
+                    // Image size handling
+                    coreImage = new CoreImage();
+                    coreImage.resizeHandler();
 
-                // Navigation
-                coreNav = new CoreNav('', {}).init();
-                coreNav.hideHeaderElements();
-
-                // Transition singleton
-                coreTransition = CoreTransition;
-
-                // Image size handling for resize event
-            	setResize();
-
-                // Listen for initial image fade
-                PubSub.subscribe('/tamm/initial/image/faded', function(e) {
-                    coreNav.showHeaderElements();
-                });
-
-                // Listen for transition
-                PubSub.subscribe('/tamm/transition/show', function(e) {
-                    coreTransition.show();
-                });
-
-                PubSub.subscribe('/tamm/transition/hide', function(e) {
-                    coreTransition.hide();
-                });
-
-                PubSub.subscribe('/tamm/section/create', function(section) {
-                    coreSection = new CoreSection('', {
-                        section: section
+                    // Image slider
+                    coreSlider = new CoreSlider('', {
+                        supportsTouch: supportsTouch
                     }).init();
-                });
 
-                PubSub.subscribe('/tamm/section/show', function(e) {
-                    coreSection.show();
-                });
+                    // Navigation
+                    coreNav = new CoreNav('', {}).init();
+                    coreNav.hideHeaderElements();
 
-                PubSub.subscribe('/tamm/section/hide', function(e) {
-                    coreSection.hide();
+                    // Transition singleton
+                    coreTransition = CoreTransition;
+
+                    // Image size handling for resize event
+                    setResize();
+
+                    // Listen for initial image fade
+                    PubSub.subscribe('/tamm/initial/image/faded', function(e) {
+                        coreNav.showHeaderElements();
+                    });
+
+                    // Listen for transition
+                    PubSub.subscribe('/tamm/transition/show', function(e) {
+                        coreTransition.show();
+                    });
+
+                    PubSub.subscribe('/tamm/transition/hide', function(e) {
+                        coreTransition.hide();
+                    });
+
+                    PubSub.subscribe('/tamm/section/create', function(section) {
+                        coreSection = new CoreSection('', {
+                            section: section
+                        }).init();
+                    });
+
+                    PubSub.subscribe('/tamm/section/show', function(e) {
+                        coreSection.show();
+                    });
+
+                    PubSub.subscribe('/tamm/section/hide', function(e) {
+                        coreSection.hide();
+                    });
+
                 });
             };
 

@@ -37,7 +37,7 @@ define([
 		 */
 		Archive.prototype = {
 			defaults: {
-                $grid: $('<div />'),
+                $grid: null,
                 $grid_item: null
 			},
 
@@ -46,6 +46,10 @@ define([
 
 				// Introduce defaults that can be extended either globally or using an object literal.
 				this.config = $.extend({}, this.defaults, this.options, this.metadata);
+
+                PubSub.subscribe('/tamm/archive/hide', function() {
+                    self.hide();
+                });
 
 				return self;
 			},
@@ -56,15 +60,28 @@ define([
                 self.load(function(data) {
 
                     var content = null;
+                    var totalImage = data.length;
+                    var loadedImage = 0;
+
+                    self.config.$grid = $('<div />');
 
                     for(var index in data) {
                         var item = data[index];
                         var thumbnail = item.thumbnail;
 
-                        self.config.$grid_item = $('<div />');
+                        self.config.$grid_item = $('<a />');
+                        self.config.$grid_item.data('id', index);
+                        self.config.$grid_item.attr('href', '#');
+
                         self.config.$grid.append(
                             self.config.$grid_item.addClass('archive-item')
                         ).addClass('archive-wrapper');
+
+                        self.config.$grid_item.on('click', function(e) {
+                            e.preventDefault();
+
+                            PubSub.publish('/tamm/archive/image/load', [$(this).data('id')], self);
+                        });
 
                         var image = new Image();
                         image.src = thumbnail;
@@ -72,23 +89,26 @@ define([
                             image
                         );
 
+                        image.onload = function() {
+                            loadedImage++;
+
+                            if(loadedImage == totalImage) {
+                                content = self.config.$grid;
+
+                                if(self.config.onReady != null) {
+                                    self.config.onReady(content);
+                                }
+
+                                var msnry = new Masonry(self.config.$grid[0], {
+                                    itemSelector: '.archive-item'
+                                });
+                            }
+                        };
+
                         self.config.$grid_item.css({
-                            opacity: 0,
-                            perspective: 300,
-                            rotateX: 15
+                            opacity: 0
                         });
                     }
-
-                    content = self.config.$grid;
-
-                    if(self.config.onReady != null) {
-                        self.config.onReady(content);
-                    }
-
-                    var msnry = new Masonry(self.config.$grid[0], {
-                        itemSelector: '.archive-item'
-                    });
-
                 });
             },
 
@@ -108,17 +128,19 @@ define([
                 var delay = 0;
 
                 $.each(self.config.$grid.children(), function(i, elem) {
-                    console.log(elem);
-
                     $(elem).transition({
-                        opacity: 1,
-                        rotateX: 0
+                        opacity: 1
                     }, delay * 100);
 
                     delay++;
                 });
 
                 return self;
+            },
+
+            hide: function() {
+                PubSub.publish('/tamm/navigation/reset');
+                PubSub.publish('/tamm/section/hide');
             }
 		};
 

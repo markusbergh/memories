@@ -1,5 +1,5 @@
 /*
- * T A M M - About
+ * T A M M - Contact
  * This file contains the about section
  *
  * Usage: var about = new About(elem, {});
@@ -18,7 +18,7 @@ define([
 		/*
 		 * Constructor
 		 */
-		var About = function(elem, options) {
+		var Contact = function(elem, options) {
 			this.elem = elem;
 			this.$elem = $(elem);
 			this.options = options;
@@ -33,7 +33,7 @@ define([
 		/*
 		 * Prototype
 		 */
-		About.prototype = {
+		Contact.prototype = {
 			defaults: {
 
 			},
@@ -50,13 +50,10 @@ define([
             create: function() {
             	var self = this;
 
-            	var title = $('<h2 />').text('These are my memories');
-				var description = $('<p>This is where you can see what I see, and what I capture as a moment in my life. Beautiful thrilling moments. And these are my memories.</p><p>Enjoy.</p>');
-
-				var content = title.add(description);
+            	var information = $('<p>Still wondering if I would like to be reached or not.</p>');
 
 				if(self.config.onReady != null) {
-					self.config.onReady(content);
+					self.config.onReady(information);
 				}
 
 				return  self;
@@ -66,14 +63,14 @@ define([
 		/*
 		 * Defaults
 		 */
-		About.defaults = About.prototype.defaults;
+		Contact.defaults = Contact.prototype.defaults;
 
-		$.fn.About = function(options) {
+		$.fn.Contact = function(options) {
 			return this.each(function() {
-				new About(this, options).init();
+				new Contact(this, options).init();
 			});
 		};
 
-		return About;
+		return Contact;
 	}
 );
