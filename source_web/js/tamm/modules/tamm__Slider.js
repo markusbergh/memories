@@ -26,7 +26,7 @@ define([
 			this.$elem = $(elem);
 			this.options = options;
 			this.currentIndex = 0;
-			this.numImages = 10;
+			this.numImages = 18;
 			this.coreImage = new CoreImage();
 			this.onImageLoaded = null;
 			this.isLoadedFromArchive = false;

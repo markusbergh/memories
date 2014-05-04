@@ -48,5 +48,45 @@
 		"id": 10,
 		"thumbnail": "static/photos/tamm_image_10_thumb.jpg",
 		"image": "static/photos/tamm_image_10.jpg"
+	},
+	{
+		"id": 11,
+		"thumbnail": "static/photos/tamm_image_11_thumb.jpg",
+		"image": "static/photos/tamm_image_11.jpg"
+	},
+	{
+		"id": 12,
+		"thumbnail": "static/photos/tamm_image_12_thumb.jpg",
+		"image": "static/photos/tamm_image_12.jpg"
+	},
+	{
+		"id": 13,
+		"thumbnail": "static/photos/tamm_image_13_thumb.jpg",
+		"image": "static/photos/tamm_image_13.jpg"
+	},
+	{
+		"id": 14,
+		"thumbnail": "static/photos/tamm_image_14_thumb.jpg",
+		"image": "static/photos/tamm_image_14.jpg"
+	},
+	{
+		"id": 15,
+		"thumbnail": "static/photos/tamm_image_15_thumb.jpg",
+		"image": "static/photos/tamm_image_15.jpg"
+	},
+	{
+		"id": 16,
+		"thumbnail": "static/photos/tamm_image_16_thumb.jpg",
+		"image": "static/photos/tamm_image_16.jpg"
+	},
+	{
+		"id": 17,
+		"thumbnail": "static/photos/tamm_image_17_thumb.jpg",
+		"image": "static/photos/tamm_image_17.jpg"
+	},
+	{
+		"id": 18,
+		"thumbnail": "static/photos/tamm_image_18_thumb.jpg",
+		"image": "static/photos/tamm_image_18.jpg"
 	}
 ]
