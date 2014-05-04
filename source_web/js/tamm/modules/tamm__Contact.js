@@ -50,10 +50,14 @@ define([
             create: function() {
             	var self = this;
 
-            	var information = $('<p>Still wondering if I would like to be reached or not.</p>');
+            	var title = $('<h2 />').text('Contact');
+            	var contactList = $('<ul />');
+            	var mail = $('<li />').text('Mail: hi@markusbergh.se').appendTo(contactList);
+
+            	var content = title.add(contactList);
 
 				if(self.config.onReady != null) {
-					self.config.onReady(information);
+					self.config.onReady(content);
 				}
 
 				return  self;

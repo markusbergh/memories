@@ -33,11 +33,49 @@ define([
 
         	var setResize = function() {
         		$(window).smartresize(function() {
-        			coreImage.resizeHandler();
+        			self.resizeHandler();
 	  			});
         	};
 
+            var resizeHandler = function(callback) {
+                var $obj = $('.app-slider'),
+                    $imgs = $obj.find("img");
+
+                $imgs.each(function(){
+
+                  var $img = $(this);
+
+                  var $container = $img.parent();
+
+                  var imageAspect = 1.5;
+                  var containerW = $container.width();
+                      var containerH = $container.height();
+                      var containerAspect = containerW/containerH;
+
+                      if(containerAspect < imageAspect) {
+                        $img.css({
+                            width: 'auto',
+                            height: containerH,
+                            top: 0,
+                            left: -(containerH*imageAspect-containerW)/2
+                        });
+                      } else {
+                        $img.css({
+                            width: containerW,
+                            height: 'auto',
+                            top: -(containerW/imageAspect-containerH)/2,
+                            left: 0
+                        });
+                      }
+                });
+
+                if(typeof callback == 'function') {
+                  callback();
+                }
+            };
+
             this.initialize = function() {
+                var self = this;
 
                 // Touch support check
                 var supportsTouch = 'ontouchstart' in window || !!navigator.msMaxTouchPoints;
@@ -47,11 +85,6 @@ define([
 
                 // Get application data
                 Model.load(function() {
-
-                    // Image size handling
-                    coreImage = new CoreImage();
-                    coreImage.resizeHandler();
-
                     // Image slider
                     coreSlider = new CoreSlider('', {
                         supportsTouch: supportsTouch
@@ -66,6 +99,7 @@ define([
 
                     // Image size handling for resize event
                     setResize();
+                    resizeHandler();
 
                     // Listen for initial image fade
                     PubSub.subscribe('/tamm/initial/image/faded', function(e) {
@@ -77,25 +111,36 @@ define([
                         coreTransition.show();
                     });
 
+                    // Listen for transition
                     PubSub.subscribe('/tamm/transition/hide', function(e) {
                         coreTransition.hide();
                     });
 
+                    // Listen for section
                     PubSub.subscribe('/tamm/section/create', function(section) {
                         coreSection = new CoreSection('', {
                             section: section
                         }).init();
                     });
 
+                    // Listen for section
                     PubSub.subscribe('/tamm/section/show', function(e) {
                         coreSection.show();
                     });
 
+                    // Listen for section
                     PubSub.subscribe('/tamm/section/hide', function(e) {
                         coreSection.hide();
                     });
 
+                    // Listen for image size handling
+                    PubSub.subscribe('/tamm/image/resize', function(callback) {
+                        resizeHandler(callback);
+                    });
+
                 });
+
+                return self;
             };
 
         };

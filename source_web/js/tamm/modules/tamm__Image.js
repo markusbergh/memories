@@ -9,10 +9,11 @@
 
 define([
     'jquery',
-        'tamm/utils/tamm__PubSub'
+    'tamm/utils/tamm__PubSub',
+    'tamm/modules/tamm__Preloader'
   ],
 
-    function($, PubSub) {
+    function($, PubSub, CorePreloader) {
 
       var TAMMImage = function() {
 
@@ -20,46 +21,7 @@ define([
                 image,
                 self = this,
                 transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend',
-                $preloader = $('.preloader-wrapper'),
-                $progress = $('.progress');
-
-            var resizeHandler = function(callback) {
-
-                var $obj = $('.app-slider'),
-                    $imgs = $obj.find("img");
-
-                $imgs.each(function(){
-
-                  var $img = $(this);
-
-                  var $container = $img.parent();
-
-                  var imageAspect = 1.5;
-                  var containerW = $container.width();
-                      var containerH = $container.height();
-                      var containerAspect = containerW/containerH;
-
-                      if(containerAspect < imageAspect) {
-                        $img.css({
-                            width: 'auto',
-                            height: containerH,
-                            top: 0,
-                            left: -(containerH*imageAspect-containerW)/2
-                        });
-                      } else {
-                        $img.css({
-                            width: containerW,
-                            height: 'auto',
-                            top: -(containerW/imageAspect-containerH)/2,
-                            left: 0
-                        });
-                      }
-                });
-
-                if(typeof callback == 'function') {
-                  callback();
-                }
-            };
+                corePreloader = new CorePreloader('', {}).init();
 
             this.base64Encode = function(inputStr) {
                  var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -107,20 +69,17 @@ define([
               };
 
               this.onStart = function() {
-                  $preloader.removeClass('hidden');
-
-                  $progress.css({
-                      width: 0
-                  });
+                  // SHow preloader
+                  PubSub.publish('/tamm/preloader/show');
               };
 
               this.onProgress = function(e) {
+                  // Calculation
                   var percentage = e.loaded / e.total;
                   var frameWidth = $(window).width();
 
-                  $progress.css({
-                      width: frameWidth * percentage
-                  }).addClass('running');
+                  // Update progress
+                  PubSub.publish('/tamm/preloader/progress', [frameWidth * percentage], this);
               };
 
               this.onLoad = function() {
@@ -129,24 +88,11 @@ define([
               };
 
               this.onLoadEnded = function() {
-                  $progress.transition({
-                      width: '100%'
-                  }, 300, function() {
-                      $preloader.addClass('hidden');
-
-                      $progress.css({
-                        width: 0
-                      });
-
-                      PubSub.publish('/tamm/image/loaded', [image], self);
-                  }).removeClass('running');
+                  // Hide preloader
+                  PubSub.publish('/tamm/preloader/hide', [image], this);
               };
 
               this.initialize = function() { };
-
-              this.resizeHandler = function(callback) {
-                resizeHandler(callback);
-              };
 
       };
 

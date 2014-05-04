@@ -172,14 +172,14 @@ define([
 						)
 					);
 
-					self.coreImage.resizeHandler();
+                    PubSub.publish('/tamm/image/resize');
 
 					// If call was passed, use it
 					if(typeof callback == 'function') {
 						callback.apply();
 					} else {
 						// Otherwise just do some size handling and fade in
-	                	self.coreImage.resizeHandler(function() {
+	                	PubSub.publish('/tamm/image/resize', [function() {
 	                		self.config.$slider_image.transition({
 								opacity: 1,
 								scale: 1
@@ -191,7 +191,7 @@ define([
 								// Set pagination
 								self.setPagination();
 							});
-	                	});
+	                	}], self);
 					}
 				});
 
@@ -200,6 +200,7 @@ define([
 					self.config.$progress.removeAttr('style');
 				} else {
 					if(!self.isLoadedFromArchive) {
+						// Initial preloader
 						self.config.$preloader.css({
 							top: 0,
 							bottom: 'auto',

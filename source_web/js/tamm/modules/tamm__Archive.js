@@ -80,6 +80,19 @@ define([
                         self.config.$grid_item.on('click', function(e) {
                             e.preventDefault();
 
+                            var index = $(this).index();
+
+                            $.each(self.config.$grid.find('a'), function(i, elem) {
+                                var $item = $(elem);
+
+                                if(i != index) {
+                                    $item.transition({
+                                        opacity: 0.5
+                                    }, 300);
+                                }
+                            });
+
+                            // Load image
                             PubSub.publish('/tamm/archive/image/load', [$(this).data('id')], self);
                         });
 

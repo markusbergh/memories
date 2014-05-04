@@ -32,7 +32,7 @@ define(function () {
                     i = thisTopic.length - 1;
 
                 for (i ; i >= 0 ; i -= 1) {
-                    thisTopic[i].apply(scope || this, args || []);
+                    thisTopic[i].apply(scope || this, args || {});
                 }
             }
         },
