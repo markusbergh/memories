@@ -2,91 +2,109 @@
 	{
 		"id": 1,
 		"thumbnail": "static/photos/tamm_image_01_thumb.jpg",
-		"image": "static/photos/tamm_image_01.jpg"
+		"image": "static/photos/tamm_image_01.jpg",
+		"caption": "Minnesberg, 2007"
 	},
 	{
 		"id": 2,
 		"thumbnail": "static/photos/tamm_image_02_thumb.jpg",
-		"image": "static/photos/tamm_image_02.jpg"
+		"image": "static/photos/tamm_image_02.jpg",
+		"caption": "Gotland, 2008"
 	},
 	{
 		"id": 3,
 		"thumbnail": "static/photos/tamm_image_03_thumb.jpg",
-		"image": "static/photos/tamm_image_03.jpg"
+		"image": "static/photos/tamm_image_03.jpg",
+		"caption": "Minnesberg, 2007"
 	},
 	{
 		"id": 4,
 		"thumbnail": "static/photos/tamm_image_04_thumb.jpg",
-		"image": "static/photos/tamm_image_04.jpg"
+		"image": "static/photos/tamm_image_04.jpg",
+		"caption": "Vinterviken, 2011"
 	},
 	{
 		"id": 5,
 		"thumbnail": "static/photos/tamm_image_05_thumb.jpg",
-		"image": "static/photos/tamm_image_05.jpg"
+		"image": "static/photos/tamm_image_05.jpg",
+		"caption": "Alingsås, 2010"
 	},
 	{
 		"id": 6,
 		"thumbnail": "static/photos/tamm_image_06_thumb.jpg",
-		"image": "static/photos/tamm_image_06.jpg"
+		"image": "static/photos/tamm_image_06.jpg",
+		"caption": "Höllviken, 2007"
 	},
 	{
 		"id": 7,
 		"thumbnail": "static/photos/tamm_image_07_thumb.jpg",
-		"image": "static/photos/tamm_image_07.jpg"
+		"image": "static/photos/tamm_image_07.jpg",
+		"caption": "Stockholms stadion, 2009"
 	},
 	{
 		"id": 8,
 		"thumbnail": "static/photos/tamm_image_08_thumb.jpg",
-		"image": "static/photos/tamm_image_08.jpg"
+		"image": "static/photos/tamm_image_08.jpg",
+		"caption": "Slussen, 2012"
 	},
 	{
 		"id": 9,
 		"thumbnail": "static/photos/tamm_image_09_thumb.jpg",
-		"image": "static/photos/tamm_image_09.jpg"
+		"image": "static/photos/tamm_image_09.jpg",
+		"caption": "Västra hamnen, 2007"
 	},
 	{
 		"id": 10,
 		"thumbnail": "static/photos/tamm_image_10_thumb.jpg",
-		"image": "static/photos/tamm_image_10.jpg"
+		"image": "static/photos/tamm_image_10.jpg",
+		"caption": "Kungsholmen, 2010"
 	},
 	{
 		"id": 11,
 		"thumbnail": "static/photos/tamm_image_11_thumb.jpg",
-		"image": "static/photos/tamm_image_11.jpg"
+		"image": "static/photos/tamm_image_11.jpg",
+		"caption": "Trädgården, 2012"
 	},
 	{
 		"id": 12,
 		"thumbnail": "static/photos/tamm_image_12_thumb.jpg",
-		"image": "static/photos/tamm_image_12.jpg"
+		"image": "static/photos/tamm_image_12.jpg",
+		"caption": "Gagnef, 2013"
 	},
 	{
 		"id": 13,
 		"thumbnail": "static/photos/tamm_image_13_thumb.jpg",
-		"image": "static/photos/tamm_image_13.jpg"
+		"image": "static/photos/tamm_image_13.jpg",
+		"caption": "Refused, 2012"
 	},
 	{
 		"id": 14,
 		"thumbnail": "static/photos/tamm_image_14_thumb.jpg",
-		"image": "static/photos/tamm_image_14.jpg"
+		"image": "static/photos/tamm_image_14.jpg",
+		"caption": "Place du Port Vieux, 2013"
 	},
 	{
 		"id": 15,
 		"thumbnail": "static/photos/tamm_image_15_thumb.jpg",
-		"image": "static/photos/tamm_image_15.jpg"
+		"image": "static/photos/tamm_image_15.jpg",
+		"caption": "Brunkebergstorg, 2012"
 	},
 	{
 		"id": 16,
 		"thumbnail": "static/photos/tamm_image_16_thumb.jpg",
-		"image": "static/photos/tamm_image_16.jpg"
+		"image": "static/photos/tamm_image_16.jpg",
+		"caption": "Istanbul, 2013"
 	},
 	{
 		"id": 17,
 		"thumbnail": "static/photos/tamm_image_17_thumb.jpg",
-		"image": "static/photos/tamm_image_17.jpg"
+		"image": "static/photos/tamm_image_17.jpg",
+		"caption": "The Naked and Famous, 2012"
 	},
 	{
 		"id": 18,
 		"thumbnail": "static/photos/tamm_image_18_thumb.jpg",
-		"image": "static/photos/tamm_image_18.jpg"
+		"image": "static/photos/tamm_image_18.jpg",
+		"caption": "Val Thorens, 2014"
 	}
 ]

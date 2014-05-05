@@ -60,6 +60,7 @@ define([
 				$slider_action_prev_paper: null,
 				$slider_image: null,
 				$slider_image_current: null,
+				$slider_caption: $('.app-slider-caption-text span'),
 				$preloader: $('.preloader-wrapper'),
                 $progress: $('.progress'),
                 $preloader_text: $('.preloader-text')
@@ -172,11 +173,6 @@ define([
 						$('html').addClass('loaded-and-ready');
 
 					} else {
-						self.config.$slider_image_current = $('.app-slider-image');
-						if(self.config.$slider_image_current.length > 0) {
-
-						}
-
 						// Style for paginating images
 						self.config.$slider_image.css({
 							x: inverse ? '-100%' : '100%',
@@ -195,6 +191,7 @@ define([
 						)
 					);
 
+					// Do resizing
                     PubSub.publish('/tamm/image/resize');
 
 					// If call was passed, use it
@@ -213,6 +210,9 @@ define([
 
 								// Set pagination
 								self.setPagination();
+
+								// Show caption
+								self.config.$slider_caption.removeClass('hidden');
 							});
 	                	}], self);
 					}
@@ -249,6 +249,9 @@ define([
 					images[self.currentIndex].image,
 					self.preloaderTarget
 				);
+
+				// Set caption text
+				self.config.$slider_caption.text(images[self.currentIndex].caption);
 
 				return self;
 			},

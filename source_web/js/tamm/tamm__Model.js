@@ -39,11 +39,15 @@ define([
 	        	var self = this;
 
 	        	$.getJSON('/data/memories.json', function(data) {
+
+	        		data = data.reverse();
+
                 	for(var index in data) {
                 		var memory = data[index];
                 		self.data[index] = {
                 			image: memory.image,
-                			thumbnail: memory.thumbnail
+                			thumbnail: memory.thumbnail,
+                			caption: memory.caption
                 		};
                 	}
 
