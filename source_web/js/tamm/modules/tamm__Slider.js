@@ -285,12 +285,15 @@ define([
 				var self = this;
 
 				$('body').keydown(function(e) {
-					if($('.slider-is-running').length <= 0) {
-
+					if($('.slider-is-running').length <= 0 && $('.loaded-and-ready').length > 0) {
 						if(e.keyCode == 37) {
-							self.prev();
+							if(self.currentIndex > 0) {
+								self.prev();
+							}
 						} else if(e.keyCode == 39) {
-							self.next();
+							if((self.currentIndex + 1) < self.numImages) {
+								self.next();
+							}
 						}
 
 						self.setPagination();

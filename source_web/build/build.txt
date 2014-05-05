@@ -6,9 +6,10 @@ vendor/jquery-1.10.1.min.js
 vendor/snap.svg-0.2.0.min.js
 tamm/utils/tamm__PubSub.js
 tamm/utils/tamm__Utils.js
+vendor/jquery.transit-0.9.9.min.js
+tamm/modules/tamm__Preloader.js
 tamm/modules/tamm__Image.js
 tamm/modules/tamm__Transition.js
-vendor/jquery.transit-0.9.9.min.js
 tamm/modules/tamm__About.js
 vendor/masonry.pkgd.min.js
 tamm/modules/tamm__Archive.js
