@@ -87,13 +87,17 @@ define([
 
                                 if(i != index) {
                                     $item.transition({
-                                        opacity: 0.5
+                                        opacity: 0.75
                                     }, 300);
                                 }
                             });
 
+                            var data = new Object();
+                            data.id = $(this).data('id');
+                            data.target = $(this);
+
                             // Load image
-                            PubSub.publish('/tamm/archive/image/load', [$(this).data('id')], self);
+                            PubSub.publish('/tamm/archive/image/load', [data], self);
                         });
 
                         var image = new Image();

@@ -60,8 +60,11 @@ define([
 			create: function() {
 				var self = this;
 
+				self.config.$section_content_wrapper = $('<div />');
+				self.config.$section_content = $('<div />');
+
 				self.config.$app.append(
-					self.config.$section.append(
+					self.config.$section.empty().append(
 						self.config.$section_content_wrapper
 					).addClass('section').css({
 						opacity: 0,

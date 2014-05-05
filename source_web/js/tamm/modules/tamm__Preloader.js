@@ -38,7 +38,8 @@ define([
 			defaults: {
 				$preloader: $('.preloader-wrapper'),
                 $progress: $('.progress'),
-                $text: $('.progress-text')
+                $text: $('.progress-text'),
+                $target: null
 			},
 
 			init: function() {
@@ -58,6 +59,20 @@ define([
 				PubSub.subscribe('/tamm/preloader/hide', function(imageLoaded) {
 					self.hide(imageLoaded);
 				});
+
+				return self;
+			},
+
+			changeState: function(state, target) {
+				var self = this;
+
+				switch(state) {
+					case 'archive':
+
+					break;
+					default:
+					break;
+				}
 
 				return self;
 			},

@@ -18,38 +18,41 @@
 
 
 .app-slider-action
-	display: block
 	position: absolute
-	top: 50%
-	margin-top: -20px
-	background: transparent url(../static/img/slider_action_arrow.svg) no-repeat 20px 0
-	width: 46px
-	height: 41px
-	text-indent: -9999px
-	left: 10px
+	top: 0
+	left: 0
+	width: 50%
+	height: 100%
+	display: block
 	z-index: 199
 	-webkit-backface-visibility: hidden
 
-	+transition(opacity 0.3s ease-in-out, background-position-x 0.3s ease-in-out)
+	span
+		@extend %hide-text
 
-	.touch &
-		&:hover
-			background-position-x: 20px
+	svg
+		position: absolute
+		top: 50%
+		margin-top: -16px
+		width: 32px
+		height: 52px
+		left: 40px
 
-	&:hover
-		background-position-x: 10px
+		@media only screen and (max-width: $break-mobile-landscape)
+			left: 10px
 
-	@media only screen and (max-width: $break-mobile-landscape)
-		left: -5px
+	+transition(opacity 0.3s ease-in-out)
 
 	&.hidden
 		opacity: 0
 		pointer-events: none
 
 	&.next
-		left: auto
-		right: 10px
-		+transform(rotate(180deg))
+		left: 50%
 
-		@media only screen and (max-width: $break-mobile-landscape)
-			right: -5px
+		svg
+			left: auto
+			right: 40px
+
+			@media only screen and (max-width: $break-mobile-landscape)
+				right: 10px

@@ -11,12 +11,13 @@
 define([
 		'jquery',
 		'transit',
+		'snapsvg',
 		'tamm/tamm__Model',
 		'tamm/utils/tamm__PubSub',
 		'tamm/modules/tamm__Image'
 	],
 
-    function($, transit, Model, PubSub, CoreImage) {
+    function($, transit, Snap, Model, PubSub, CoreImage) {
 
 		/*
 		 * Constructor
@@ -30,6 +31,9 @@ define([
 			this.coreImage = new CoreImage();
 			this.onImageLoaded = null;
 			this.isLoadedFromArchive = false;
+			this.hasAnimatedPaginationNext = false;
+			this.hasAnimatedPaginationPrev = false;
+			this.preloaderTarget = null;
 
 			// This next line takes advantage of HTML5 data attributes
 			// to support customization of the plugin on a per-element
@@ -47,7 +51,13 @@ define([
 				$slider_image_wrapper: $('.app-slider-image-wrapper'),
 				$slider_action: $('.app-slider-action'),
 				$slider_action_next: $('.app-slider-action.next'),
+				$slider_action_next_path: null,
+				$slider_action_next_svg: null,
+				$slider_action_next_paper: null,
 				$slider_action_prev: $('.app-slider-action.prev'),
+				$slider_action_prev_path: null,
+				$slider_action_prev_svg: null,
+				$slider_action_prev_paper: null,
 				$slider_image: null,
 				$slider_image_current: null,
 				$preloader: $('.preloader-wrapper'),
@@ -76,10 +86,20 @@ define([
     			 */
     			self.addKeyboard();
 
-    			PubSub.subscribe('/tamm/archive/image/load', function(index) {
+    			/**
+    			 * Vector arrows
+    			 */
+    			self.loadSVG();
+
+    			/**
+    			 * Listener for loading from archive
+    			 */
+    			PubSub.subscribe('/tamm/archive/image/load', function(data) {
     				self.isLoadedFromArchive = true;
 
-    				self.currentIndex = parseInt(index, 10);
+    				self.currentIndex = parseInt(data.id, 10);
+    				self.preloaderTarget = data.target;
+
     				self.load();
     			});
 
@@ -115,6 +135,9 @@ define([
 				}
 
 				this.onImageLoaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
+
+					// Reset preloader target
+					self.preloaderTarget = null;
 
 					// Create image container
 					self.config.$slider_image = $('<div />');
@@ -223,7 +246,8 @@ define([
 
 				var images = Model.get();
 				this.coreImage.load(
-					images[self.currentIndex].image
+					images[self.currentIndex].image,
+					self.preloaderTarget
 				);
 
 				return self;
@@ -235,15 +259,25 @@ define([
 				// Some logic with previous button
 				if(self.currentIndex > 0) {
                     self.config.$slider_action_prev.removeClass('hidden');
+                    if(!self.hasAnimatedPaginationPrev) {
+                    	self.hasAnimatedPaginationPrev = true;
+                    	self.onAnimatePaginationPrev();
+                    }
                 } else {
                     self.config.$slider_action_prev.addClass('hidden');
+                    self.hasAnimatedPaginationPrev = false;
                 }
 
                 // Some logic with next button
                 if((self.currentIndex + 1) == self.numImages) {
                     self.config.$slider_action_next.addClass('hidden');
+                    self.hasAnimatedPaginationNext = false;
                 } else {
                     self.config.$slider_action_next.removeClass('hidden');
+                    if(!self.hasAnimatedPaginationNext) {
+                    	self.hasAnimatedPaginationNext = true;
+                    	self.onAnimatePaginationNext();
+                    }
                 }
 
                 // Update url to current image index
@@ -381,6 +415,85 @@ define([
 	            }, true); // Inverted pagination
 
 	            return self;
+			},
+
+			loadSVG: function() {
+				var self = this;
+
+				self.config.$slider_action_next_paper = new Snap('#app-slider-action-next-arrow');
+				self.config.$slider_action_prev_paper = new Snap('#app-slider-action-prev-arrow');
+
+				self.config.$slider_action_next_svg = 'M30.258,28.711c-8.049,7.354-16.095,14.707-24.143,22.053C2.8,53.792-2.14,48.875,1.188,45.837 c7.162-6.542,14.323-13.082,21.485-19.624C15.475,19.445,8.279,12.669,1.079,5.899C-2.2,2.818,2.74-2.103,6.008,0.975 c8.083,7.603,16.166,15.206,24.25,22.809C31.595,25.047,31.629,27.463,30.258,28.711z';
+				self.config.$slider_action_next_path = self.config.$slider_action_next_paper.path(self.config.$slider_action_next_svg).attr({
+					stroke: '#fff',
+					fill: '#fff'
+				});
+
+				self.config.$slider_action_prev_svg = 'M1.016,23.002C9.065,15.649,17.11,8.295,25.159,0.95 c3.314-3.028,8.254,1.888,4.927,4.927C22.924,12.419,15.762,18.958,8.6,25.5c7.199,6.768,14.395,13.544,21.595,20.314 c3.279,3.081-1.661,8.002-4.93,4.924c-8.083-7.603-16.166-15.206-24.25-22.809C-0.321,26.666-0.355,24.25,1.016,23.002z';
+				self.config.$slider_action_prev_path = self.config.$slider_action_prev_paper.path(self.config.$slider_action_prev_svg).attr({
+					stroke: '#fff',
+					fill: '#fff'
+				});
+
+				return self;
+			},
+
+			onAnimatePaginationNext: function(e) {
+				var self = this;
+
+				self.config.$slider_action_next_paper.clear();
+
+				var line = self.config.$slider_action_next_paper.path(self.config.$slider_action_next_svg).attr({
+					stroke: '#fff',
+					fill: 'none'
+				});
+
+				var length = line.getTotalLength();
+
+				line.attr({
+					strokeDasharray: length + ' ' + length
+				});
+
+				Snap.animate(length, 0, function(val) {
+					line.attr({
+						strokeDashoffset: val
+					})
+				}, 300, function() {
+					line.animate({
+						fill: '#fff'
+					}, 300);
+				});
+
+				return self;
+			},
+
+			onAnimatePaginationPrev: function(e) {
+				var self = this;
+
+				self.config.$slider_action_prev_paper.clear();
+
+				var line = self.config.$slider_action_prev_paper.path(self.config.$slider_action_prev_svg).attr({
+					stroke: '#fff',
+					fill: 'none'
+				});
+
+				var length = line.getTotalLength();
+
+				line.attr({
+					strokeDasharray: length + ' ' + length
+				});
+
+				Snap.animate(length, 0, function(val) {
+					line.attr({
+						strokeDashoffset: val
+					})
+				}, 300, function() {
+					line.animate({
+						fill: '#fff'
+					}, 300);
+				});
+
+				return self;
 			}
 		};
 

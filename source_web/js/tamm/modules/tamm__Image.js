@@ -21,6 +21,7 @@ define([
                 image,
                 self = this,
                 transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend',
+                target,
                 corePreloader = new CorePreloader('', {}).init();
 
             this.base64Encode = function(inputStr) {
@@ -56,7 +57,18 @@ define([
                   return outputStr;
               };
 
-              this.load = function(imageURI) {
+              this.load = function(imageURI, target) {
+
+                  target = target || null;
+
+                  if(target) {
+                    corePreloader.config.$preloader.appendTo(target);
+                  } else if(target == null && !corePreloader.config.$preloader.parent().is('body')) {
+                    $('#transition').before(
+                      corePreloader.config.$preloader
+                    );
+                  }
+
                   request = new XMLHttpRequest();
                   request.onloadstart = this.onStart;
                   request.onprogress = this.onProgress;
@@ -69,16 +81,13 @@ define([
               };
 
               this.onStart = function() {
-                  // SHow preloader
                   PubSub.publish('/tamm/preloader/show');
               };
 
               this.onProgress = function(e) {
-                  // Calculation
                   var percentage = e.loaded / e.total;
-                  var frameWidth = $(window).width();
+                  var frameWidth = target ? target.width() : $(window).width();
 
-                  // Update progress
                   PubSub.publish('/tamm/preloader/progress', [frameWidth * percentage], this);
               };
 
@@ -88,7 +97,6 @@ define([
               };
 
               this.onLoadEnded = function() {
-                  // Hide preloader
                   PubSub.publish('/tamm/preloader/hide', [image], this);
               };
 

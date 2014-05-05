@@ -33,7 +33,7 @@ define([
 
         	var setResize = function() {
         		$(window).smartresize(function() {
-        			self.resizeHandler();
+        			resizeHandler();
 	  			});
         	};
 
