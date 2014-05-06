@@ -70,7 +70,7 @@ define([
                         var thumbnail = item.thumbnail;
 
                         self.config.$grid_item = $('<a />');
-                        self.config.$grid_item.data('id', index);
+                        self.config.$grid_item.data('id', totalImage - index);
                         self.config.$grid_item.attr('href', '#');
 
                         self.config.$grid.append(
@@ -93,7 +93,7 @@ define([
                             });
 
                             var data = new Object();
-                            data.id = $(this).data('id');
+                            data.id = $(this).data('id') - 1;
                             data.target = $(this);
 
                             // Load image

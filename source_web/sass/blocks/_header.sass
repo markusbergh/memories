@@ -1,13 +1,23 @@
 header[role="banner"]
 	margin: 0
 
+	&:after
+		content: ""
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 150px
+		z-index: 199
+		+linear-gradient(rgba(0, 0, 0, 0.3), transparent)
+
 	h1
 		+font-size(24px)
 		position: relative
 		text-transform: uppercase
 		letter-spacing: 0.1em
 		font-weight: 600
-		z-index: 199
+		z-index: 299
 		margin: 50px 0 0 0
 		opacity: 0
 
@@ -34,7 +44,7 @@ header[role="banner"]
 		position: absolute
 		right: 40px
 		top: 65px
-		z-index: 199
+		z-index: 299
 		font-weight: 500
 		display: block
 		letter-spacing: 0.2em
@@ -42,12 +52,3 @@ header[role="banner"]
 
 		@media only screen and (max-width: $break-mobile-landscape)
 			display: none
-
-	#logo-canvas
-		position: absolute
-		top: 4px
-		left: 50%
-		margin-left: -225px
-		width: 450px
-		height: 48px
-		z-index: 99

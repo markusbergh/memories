@@ -12,9 +12,9 @@ require(['jquery', './tamm/tamm__App'], function($, CoreApp) {
 	$(function() {
 
 		// Defaults
-		window.Z_INDEX_NAV_TOGGLE = 499;
-		window.Z_INDEX_SECTION = 399;
-		window.Z_INDEX_TRANSITION = 299;
+		window.Z_INDEX_NAV_TOGGLE = 699;
+		window.Z_INDEX_SECTION = 599;
+		window.Z_INDEX_TRANSITION = 499;
 
 		// Kickstart application
 		var app = new CoreApp().initialize();

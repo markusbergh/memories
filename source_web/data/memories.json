@@ -45,7 +45,7 @@
 		"id": 8,
 		"thumbnail": "static/photos/tamm_image_08_thumb.jpg",
 		"image": "static/photos/tamm_image_08.jpg",
-		"caption": "Slussen, 2012"
+		"caption": "Slussen, 2010"
 	},
 	{
 		"id": 9,
@@ -87,24 +87,60 @@
 		"id": 15,
 		"thumbnail": "static/photos/tamm_image_15_thumb.jpg",
 		"image": "static/photos/tamm_image_15.jpg",
-		"caption": "Brunkebergstorg, 2012"
+		"caption": "Brunkebergstorg, 2013"
 	},
 	{
 		"id": 16,
 		"thumbnail": "static/photos/tamm_image_16_thumb.jpg",
 		"image": "static/photos/tamm_image_16.jpg",
-		"caption": "Istanbul, 2013"
+		"caption": "Istanbul, 2012"
 	},
 	{
 		"id": 17,
 		"thumbnail": "static/photos/tamm_image_17_thumb.jpg",
 		"image": "static/photos/tamm_image_17.jpg",
-		"caption": "The Naked and Famous, 2012"
+		"caption": "The Naked and Famous, 2011"
 	},
 	{
 		"id": 18,
 		"thumbnail": "static/photos/tamm_image_18_thumb.jpg",
 		"image": "static/photos/tamm_image_18.jpg",
 		"caption": "Val Thorens, 2014"
+	},
+	{
+		"id": 19,
+		"thumbnail": "static/photos/tamm_image_19_thumb.jpg",
+		"image": "static/photos/tamm_image_19.jpg",
+		"caption": "Trädgården, 2012"
+	},
+	{
+		"id": 20,
+		"thumbnail": "static/photos/tamm_image_20_thumb.jpg",
+		"image": "static/photos/tamm_image_20.jpg",
+		"caption": "Mariatorget, 2010"
+	},
+	{
+		"id": 21,
+		"thumbnail": "static/photos/tamm_image_21_thumb.jpg",
+		"image": "static/photos/tamm_image_21.jpg",
+		"caption": "Tofta, 2011"
+	},
+	{
+		"id": 22,
+		"thumbnail": "static/photos/tamm_image_22_thumb.jpg",
+		"image": "static/photos/tamm_image_22.jpg",
+		"caption": "Malmö, 2009"
+	},
+	{
+		"id": 23,
+		"thumbnail": "static/photos/tamm_image_23_thumb.jpg",
+		"image": "static/photos/tamm_image_23.jpg",
+		"caption": "Lisö, 2011"
+	},
+	{
+		"id": 24,
+		"thumbnail": "static/photos/tamm_image_24_thumb.jpg",
+		"image": "static/photos/tamm_image_24.jpg",
+		"caption": "Skinnarviksberget, 2012"
 	}
 ]
