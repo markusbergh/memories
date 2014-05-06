@@ -191,11 +191,29 @@ define([
 						)
 					);
 
+					// Set caption text
+					self.config.$slider_caption.transition({
+						opacity: 0,
+						perspective: 300,
+						rotateY: -10
+					}, 300, 'in-out', function() {
+						self.config.$slider_caption.text(images[self.currentIndex].caption);
+						self.config.$slider_caption.css({
+							perspective: 300,
+							rotateY: 10
+						}).transition({
+							opacity: 1,
+							rotateY: 0
+						}, 300, 'in-out');
+					});
+
 					// Do resizing
                     PubSub.publish('/tamm/image/resize');
 
-					// If call was passed, use it
+					// If call was passed
 					if(typeof callback == 'function') {
+
+						// Invoke callback
 						callback.apply();
 					} else {
 						// Otherwise just do some size handling and fade in
@@ -259,9 +277,6 @@ define([
 					imageSource,
 					self.preloaderTarget
 				);
-
-				// Set caption text
-				self.config.$slider_caption.text(images[self.currentIndex].caption);
 
 				return self;
 			},
