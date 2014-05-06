@@ -245,8 +245,18 @@ define([
 				}
 
 				var images = Model.get();
+
+				// Depending on viewport size we load different image quality
+				var mql = window.matchMedia("screen and (max-width: 765px)");
+				var imageSource = null;
+				if(mql.matches) {
+					imageSource = images[self.currentIndex].image_medium;
+				} else {
+					imageSource = images[self.currentIndex].image;
+				}
+
 				this.coreImage.load(
-					images[self.currentIndex].image,
+					imageSource,
 					self.preloaderTarget
 				);
 

@@ -46,6 +46,7 @@ define([
                 		var memory = data[index];
                 		self.data[index] = {
                 			image: memory.image,
+                			image_medium: memory.image_medium,
                 			thumbnail: memory.thumbnail,
                 			caption: memory.caption
                 		};

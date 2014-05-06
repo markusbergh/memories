@@ -53,6 +53,7 @@
 	display: block
 	z-index: 399
 	-webkit-backface-visibility: hidden
+	-webkit-tap-highlight-color: rgba(0 , 0, 0, 0)
 
 	span
 		@extend %hide-text
@@ -66,6 +67,7 @@
 		left: 40px
 
 		@media only screen and (max-width: $break-mobile-landscape)
+			+transform(scale(0.7))
 			left: 10px
 
 	+transition(opacity 0.3s ease-in-out)
@@ -82,4 +84,5 @@
 			right: 40px
 
 			@media only screen and (max-width: $break-mobile-landscape)
+				+transform(scale(0.7))
 				right: 10px

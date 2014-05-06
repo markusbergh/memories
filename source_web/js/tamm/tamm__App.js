@@ -74,6 +74,18 @@ define([
                 }
             };
 
+            this.orientationChanged = function(e) {
+                switch(window.orientation)
+                {
+                    case -90:
+                    case 90:
+                        window.scrollTo(0, 0);
+                    break;
+                    default:
+                    break;
+                }
+            };
+
             this.initialize = function() {
                 var self = this;
 
@@ -82,6 +94,9 @@ define([
                 if(supportsTouch) {
                     $('html').addClass('touch');
                 }
+
+                // Orientation
+                window.addEventListener('orientationchange', this.orientationChanged);
 
                 // Get application data
                 Model.load(function() {
