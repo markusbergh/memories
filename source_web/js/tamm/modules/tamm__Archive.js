@@ -65,6 +65,8 @@ define([
 
                     self.config.$grid = $('<div />');
 
+                    PubSub.publish('/tamm/archive/load');
+
                     for(var index in data) {
                         var item = data[index];
                         var thumbnail = item.thumbnail;
@@ -74,7 +76,9 @@ define([
                         self.config.$grid_item.attr('href', '#');
 
                         self.config.$grid.append(
-                            self.config.$grid_item.addClass('archive-item')
+                            self.config.$grid_item.css({
+                                opacity: 0
+                            }).addClass('archive-item')
                         ).addClass('archive-wrapper');
 
                         self.config.$grid_item.on('click', function(e) {
@@ -109,6 +113,9 @@ define([
                         image.onload = function() {
                             loadedImage++;
 
+                            var percentage = loadedImage / totalImage;
+                            PubSub.publish('/tamm/archive/progress', [percentage * $(window).width()], self);
+
                             if(loadedImage == totalImage) {
                                 content = self.config.$grid;
 
@@ -116,17 +123,17 @@ define([
                                     self.config.onReady(content);
                                 }
 
+                                PubSub.publish('/tamm/archive/loaded');
+
                                 var msnry = new Masonry(self.config.$grid[0], {
                                     itemSelector: '.archive-item'
                                 });
                             }
                         };
-
-                        self.config.$grid_item.css({
-                            opacity: 0
-                        });
                     }
                 });
+
+                return self;
             },
 
             load: function(callback) {
@@ -147,7 +154,7 @@ define([
                 $.each(self.config.$grid.children(), function(i, elem) {
                     $(elem).transition({
                         opacity: 1
-                    }, delay * 100);
+                    }, delay * 300);
 
                     delay++;
                 });

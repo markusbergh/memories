@@ -43,7 +43,9 @@ define([
 				$section: $('<div />'),
 				$section_content_wrapper: $('<div />'),
 				$section_content: $('<div />'),
-				$section_data: null
+				$section_data: null,
+				$section_preloader: $('<div />'),
+				$section_preloader_progress: $('<div />')
 			},
 
 			init: function() {
@@ -89,6 +91,36 @@ define([
 								self.onSectionReady(data);
 							}
 						}).init();
+
+						// Create preloader for archive
+						self.config.$section_content_wrapper.append(
+							self.config.$section_preloader.append(
+								self.config.$section_preloader_progress.css({
+									width: 0
+								}).addClass('archive-preloader-progress')
+							).addClass('archive-preloader')
+						);
+
+						// Listen for event
+						PubSub.subscribe('/tamm/archive/load', function(progress) {
+							self.config.$section_preloader.addClass('running');
+						});
+
+						PubSub.subscribe('/tamm/archive/progress', function(progress) {
+							self.config.$section_preloader_progress.css({
+								width: progress
+							});
+						});
+
+						PubSub.subscribe('/tamm/archive/loaded', function() {
+							self.config.$section_preloader.css({
+								width: '100%'
+							}).transition({
+								opacity: 0
+							}, 600, function() {
+								self.config.$section_preloader.remove();
+							});
+						});
 
 						self.config.$section_content_wrapper.addClass('archive');
 						self.config.$section_content.addClass('archive');

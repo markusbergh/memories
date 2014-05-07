@@ -63,20 +63,6 @@ define([
 				return self;
 			},
 
-			changeState: function(state, target) {
-				var self = this;
-
-				switch(state) {
-					case 'archive':
-
-					break;
-					default:
-					break;
-				}
-
-				return self;
-			},
-
             show: function() {
             	var self = this;
 

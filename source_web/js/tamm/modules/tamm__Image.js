@@ -80,7 +80,7 @@ define([
                   request.send(null);
               };
 
-              this.onStart = function() {
+              this.onStart = function(e) {
                   PubSub.publish('/tamm/preloader/show');
               };
 

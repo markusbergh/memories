@@ -27,7 +27,7 @@ define([
 			this.$elem = $(elem);
 			this.options = options;
 			this.currentIndex = 0;
-			this.numImages = 18;
+			this.numImages = null;
 			this.coreImage = new CoreImage();
 			this.onImageLoaded = null;
 			this.isLoadedFromArchive = false;
@@ -191,27 +191,25 @@ define([
 						)
 					);
 
-					// Set caption text
-					self.config.$slider_caption.transition({
-						opacity: 0,
-						perspective: 300,
-						rotateY: -10
-					}, 300, 'in-out', function() {
-						self.config.$slider_caption.text(images[self.currentIndex].caption);
-						self.config.$slider_caption.css({
-							perspective: 300,
-							rotateY: 10
-						}).transition({
-							opacity: 1,
-							rotateY: 0
-						}, 300, 'in-out');
-					});
-
 					// Do resizing
                     PubSub.publish('/tamm/image/resize');
 
 					// If call was passed
 					if(typeof callback == 'function') {
+						self.config.$slider_caption.transition({
+							opacity: 0,
+							perspective: 300,
+							rotateY: inverse ? 15 : -15
+						}, 300, 'in-out', function() {
+							self.config.$slider_caption.text(images[self.currentIndex].caption);
+							self.config.$slider_caption.css({
+								perspective: 300,
+								rotateY: inverse ? -15 : 15
+							}).transition({
+								opacity: 1,
+								rotateY: 0
+							}, 300, 'in-out');
+						});
 
 						// Invoke callback
 						callback.apply();
@@ -222,7 +220,6 @@ define([
 								opacity: 1,
 								scale: 1
 							}, 500, 'out', function() {
-
 								// Dispatch event
 								PubSub.publish('/tamm/initial/image/faded');
 
@@ -231,6 +228,12 @@ define([
 
 								// Show caption
 								self.config.$slider_caption.removeClass('hidden');
+
+								self.config.$slider_caption.text(images[self.currentIndex].caption);
+								self.config.$slider_caption.transition({
+									opacity: 1
+								}, 300);
+
 							});
 	                	}], self);
 					}
@@ -241,7 +244,7 @@ define([
 					self.config.$progress.removeAttr('style');
 				} else {
 					if(!self.isLoadedFromArchive) {
-						// Initial preloader
+						// Fullscreen preloader
 						self.config.$preloader.css({
 							top: 0,
 							bottom: 'auto',
@@ -263,6 +266,7 @@ define([
 				}
 
 				var images = Model.get();
+				self.numImages = images.length;
 
 				// Depending on viewport size we load different image quality
 				var mql = window.matchMedia("screen and (max-width: 765px)");
