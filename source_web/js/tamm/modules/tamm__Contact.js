@@ -35,7 +35,8 @@ define([
 		 */
 		Contact.prototype = {
 			defaults: {
-
+				$contact_list: $('<ul />'),
+				$contact_list_item: null
 			},
 
 			init: function() {
@@ -50,10 +51,28 @@ define([
             create: function() {
             	var self = this;
 
-            	var content = $('<p />').text('Still wondering if I would like to be reached or not.');
+            	var $content = $();
+
+            	self.config.$contact_list.empty();
+
+            	self.config.$contact_list_item = $('<li><a href="mailto:hi@markusbergh.se" target="_blank">Mail</a></li>');
+            	self.config.$contact_list.append(self.config.$contact_list_item);
+
+            	self.config.$contact_list_item = $('<li><a href="http://se.linkedin.com/in/markusbergh" target="_blank">LinkedIn</a></li>');
+            	self.config.$contact_list.append(self.config.$contact_list_item);
+
+            	self.config.$contact_list_item = $('<li><a href="http://twitter.com/markusbergh/" target="_blank">Twitter</a></li>');
+            	self.config.$contact_list.append(self.config.$contact_list_item);
+
+            	self.config.$contact_list_item = $('<li><a href="http://instagram.com/markusbergh/" target="_blank">Instagram</a></li>');
+            	self.config.$contact_list.append(self.config.$contact_list_item);
+
+            	$content = $content.add(self.config.$contact_list);
+
+            	console.log(self.config.$contact_list);
 
 				if(self.config.onReady != null) {
-					self.config.onReady(content);
+					self.config.onReady($content);
 				}
 
 				return  self;
