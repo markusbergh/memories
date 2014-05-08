@@ -69,8 +69,6 @@ define([
 
             	$content = $content.add(self.config.$contact_list);
 
-            	console.log(self.config.$contact_list);
-
 				if(self.config.onReady != null) {
 					self.config.onReady($content);
 				}
