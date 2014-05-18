@@ -166,5 +166,33 @@
 		"image": "static/photos/tamm_image_24.jpg",
 		"image_medium": "static/photos/tamm_image_24_medium.jpg",
 		"caption": "Skinnarviksberget, 2012"
+	},
+	{
+		"id": 25,
+		"thumbnail": "static/photos/tamm_image_25_thumb.jpg",
+		"image": "static/photos/tamm_image_25.jpg",
+		"image_medium": "static/photos/tamm_image_25_medium.jpg",
+		"caption": "Midsommar, 2013"
+	},
+	{
+		"id": 26,
+		"thumbnail": "static/photos/tamm_image_26_thumb.jpg",
+		"image": "static/photos/tamm_image_26.jpg",
+		"image_medium": "static/photos/tamm_image_26_medium.jpg",
+		"caption": "Hemma hos Kaj, 2011"
+	},
+	{
+		"id": 27,
+		"thumbnail": "static/photos/tamm_image_27_thumb.jpg",
+		"image": "static/photos/tamm_image_27.jpg",
+		"image_medium": "static/photos/tamm_image_27_medium.jpg",
+		"caption": "Marstrand, 2012"
+	},
+	{
+		"id": 28,
+		"thumbnail": "static/photos/tamm_image_28_thumb.jpg",
+		"image": "static/photos/tamm_image_28.jpg",
+		"image_medium": "static/photos/tamm_image_28_medium.jpg",
+		"caption": "Vitabergsparken, 2012"
 	}
 ]

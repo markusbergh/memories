@@ -77,7 +77,9 @@ define([
 
                         self.config.$grid.append(
                             self.config.$grid_item.css({
-                                opacity: 0
+                                opacity: 0,
+                                perspective: 800,
+                                rotateX: 25,
                             }).addClass('archive-item')
                         ).addClass('archive-wrapper');
 
@@ -153,8 +155,9 @@ define([
 
                 $.each(self.config.$grid.children(), function(i, elem) {
                     $(elem).transition({
-                        opacity: 1
-                    }, delay * 300);
+                        opacity: 1,
+                        rotateX: 0
+                    }, delay * 0);
 
                     delay++;
                 });
