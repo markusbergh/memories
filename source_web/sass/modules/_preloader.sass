@@ -27,24 +27,32 @@
   &.top
     background: rgba(255, 255, 255, 1)
 
-  &.running
-    +transition(width 100ms ease)
-
 .preloader-text
-  display: table
-  width: 100%
-  height: 100%
-  position: relative
-  z-index: 999
-
+  width: auto
+  height: auto
+  position: absolute
+  left: 50%
+  top: 50%
+  +transform(translateX(-50%) translateY(-50%))
+  
   .loaded-and-ready &
     display: none
 
-  p
-    display: table-cell
-    vertical-align: middle
+  span
+    letter-spacing: 0.15em
+    font-weight: 800
     text-transform: uppercase
-    font-weight: 600
-    letter-spacing: 0.3em
-    font-size: 16px
-    color: white
+    font-style: normal
+    +font-size(64px)
+  
+.preloader-text-item-primary
+  color: gray
+
+.preloader-text-item-secondary
+  color: white
+  position: absolute
+  top: 0
+  left: 0
+  overflow: hidden
+  width: 0
+  +transition(width 300ms ease)

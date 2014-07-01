@@ -106,12 +106,14 @@ define([
 							self.config.$section_preloader.addClass('running');
 						});
 
+						// Set progress of loading archive
 						PubSub.subscribe('/tamm/archive/progress', function(progress) {
 							self.config.$section_preloader_progress.css({
 								width: progress
 							});
 						});
 
+						// When archive is loaded and ready
 						PubSub.subscribe('/tamm/archive/loaded', function() {
 							self.config.$section_preloader.css({
 								width: '100%'

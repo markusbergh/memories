@@ -223,6 +223,9 @@ define([
 								// Dispatch event
 								PubSub.publish('/tamm/initial/image/faded');
 
+								// Remove preloader text elements
+								self.config.$preloader_text.remove();
+
 								// Set pagination
 								self.setPagination();
 
@@ -244,6 +247,7 @@ define([
 					self.config.$progress.removeAttr('style');
 				} else {
 					if(!self.isLoadedFromArchive) {
+
 						// Fullscreen preloader
 						self.config.$preloader.css({
 							top: 0,
@@ -262,6 +266,7 @@ define([
 						}).transition({
 							opacity: 1
 						}, 500);
+
 					}
 				}
 

@@ -23,6 +23,7 @@ define([
 			this.elem = elem;
 			this.$elem = $(elem);
 			this.options = options;
+			this.maxWidthText = 0;
 
 			// This next line takes advantage of HTML5 data attributes
 			// to support customization of the plugin on a per-element
@@ -38,7 +39,7 @@ define([
 			defaults: {
 				$preloader: $('.preloader-wrapper'),
                 $progress: $('.progress'),
-                $text: $('.progress-text'),
+                $preloader_text: null,
                 $target: null
 			},
 
@@ -66,11 +67,18 @@ define([
             show: function() {
             	var self = this;
 
+            	self.config.$preloader_text = $('.preloader-text');
+				self.maxWidthText = self.config.$preloader_text.width();
+
             	self.config.$preloader.removeClass('hidden');
 
-				self.config.$progress.css({
-					width: 0
-				});
+            	if(!self.maxWidthText) {
+
+					self.config.$progress.css({
+						width: 0
+					});
+
+				}
 
 				return  self;
             },
@@ -78,9 +86,18 @@ define([
             progress: function(progress) {
             	var self = this;
 
-            	self.config.$progress.css({
-                	width: progress
-                }).addClass('running');
+            	if(self.maxWidthText) {
+
+            		var perentage = progress / $(window).width();
+            		self.config.$preloader_text.find('.preloader-text-item-secondary').css({
+            			width: perentage * self.maxWidthText
+            		});
+
+            	} else {
+            		self.config.$progress.css({
+	                	width: progress
+	                }).addClass('running');
+            	};
 
             	return self;
             },
@@ -88,17 +105,27 @@ define([
             hide: function(imageLoaded) {
             	var self = this;
 
-				self.config.$progress.transition({
-					width: '100%'
-				}, 300, function() {
-					self.config.$preloader.addClass('hidden');
+            	if(!self.maxWidthText) {
+					self.config.$progress.transition({
+						width: '100%'
+					}, 300, function() {
+						self.config.$preloader.addClass('hidden');
 
-					self.config.$progress.css({
-						width: 0
+						self.config.$progress.css({
+							width: 0
+						});
+
+						PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
+					}).removeClass('running');
+				} else {
+					self.config.$preloader_text.transition({
+						width: self.maxWidthText
+					}, 300, function() {
+						self.config.$preloader.addClass('hidden');
+
+						PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
 					});
-
-					PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
-				}).removeClass('running');
+				}
 
             	return self;
             },
