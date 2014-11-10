@@ -55,7 +55,7 @@ module.exports = function(grunt) {
                     precision: 4
                 },
                 files: {
-                    '<%= pkg.directories.build_css %>/styles..min.css': '<%= pkg.directories.src_sass %>/styles.sass'
+                    '<%= pkg.directories.build_css %>/styles.min.css': '<%= pkg.directories.src_sass %>/styles.sass'
                 }
             }
         },
