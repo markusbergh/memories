@@ -194,5 +194,12 @@
 		"image": "static/photos/tamm_image_28.jpg",
 		"image_medium": "static/photos/tamm_image_28_medium.jpg",
 		"caption": "Vitabergsparken, 2012"
+	},
+	{
+		"id": 29,
+		"thumbnail": "static/photos/tamm_image_29_thumb.jpg",
+		"image": "static/photos/tamm_image_29.jpg",
+		"image_medium": "static/photos/tamm_image_29_medium.jpg",
+		"caption": "Mew, 2014"
 	}
 ]
