@@ -38,13 +38,24 @@ module.exports = function(grunt) {
         sass: {
             dev: {
                 options: {
+                    style: 'expanded',
+                    trace: true,
+                    sourcemap: true,
+                    precision: 4
+                },
+                files: {
+                    '<%= pkg.directories.src_css %>/styles.css': '<%= pkg.directories.src_sass %>/styles.sass'
+                }
+            },
+            deploy: {
+                options: {
                     style: 'compressed',
                     trace: true,
                     sourcemap: true,
                     precision: 4
                 },
                 files: {
-                    '<%= pkg.directories.src_css %>/styles.min.css': '<%= pkg.directories.src_sass %>/styles.sass'
+                    '<%= pkg.directories.build_css %>/styles..min.css': '<%= pkg.directories.src_sass %>/styles.sass'
                 }
             }
         },
@@ -78,14 +89,53 @@ module.exports = function(grunt) {
                     ]
                 }
             }
+        },
+
+        /*
+         * Process HTML
+         */
+        processhtml: {
+            options: {
+
+            },
+            dist: {
+                files: {
+                    '<%= pkg.directories.build %>/index.html': '<%= pkg.directories.src %>/index.html'
+                }
+            }
+        },
+
+        /*
+         * Copy static files
+         */
+        copy: {
+            photos: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= pkg.directories.src %>/static/photos',
+                        src: ['**'],
+                        dest: '<%= pkg.directories.build %>/static/photos'},
+                ]
+            },
+            data: {
+                files: [
+                    {
+                        src: '<%= pkg.directories.src %>/data/memories.json',
+                        dest: '<%= pkg.directories.build %>/data/memories.json'
+                    }
+                ]
+            }
         }
 
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-processhtml');
 
     grunt.registerTask('default', ['watch:sass']);
+    grunt.registerTask('deploy', ['sass:deploy','requirejs', 'processhtml', 'copy:photos', 'copy:data']);
 };

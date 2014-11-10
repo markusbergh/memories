@@ -3,17 +3,19 @@
   "version": "1.0.0",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-uglify": "0.2.0",
-    "grunt-contrib-cssmin": "0.6.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-requirejs": "~0.4.3",
     "grunt-contrib-sass": "0.5.0",
     "grunt-contrib-watch": "0.5.3",
-    "grunt-contrib-requirejs": "~0.4.3"
+    "grunt-processhtml": "^0.3.3"
   },
   "directories": {
     "src": "source_web",
     "src_css": "source_web/css",
     "src_sass": "source_web/sass",
     "src_js": "source_web/js",
-    "build_js": "source_web/build"
+    "build": "deploy_web",
+    "build_css": "deploy_web/css",
+    "build_js": "deploy_web/js"
   }
 }
