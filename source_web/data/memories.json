@@ -201,5 +201,33 @@
 		"image": "static/photos/tamm_image_29.jpg",
 		"image_medium": "static/photos/tamm_image_29_medium.jpg",
 		"caption": "Mew, 2014"
+	},
+	{
+		"id": 30,
+		"thumbnail": "static/photos/tamm_image_30_thumb.jpg",
+		"image": "static/photos/tamm_image_30.jpg",
+		"image_medium": "static/photos/tamm_image_30_medium.jpg",
+		"caption": "Stadshuset, 2015"
+	},
+	{
+		"id": 31,
+		"thumbnail": "static/photos/tamm_image_31_thumb.jpg",
+		"image": "static/photos/tamm_image_31.jpg",
+		"image_medium": "static/photos/tamm_image_31_medium.jpg",
+		"caption": "Trädgården, 2015"
+	},
+	{
+		"id": 32,
+		"thumbnail": "static/photos/tamm_image_32_thumb.jpg",
+		"image": "static/photos/tamm_image_32.jpg",
+		"image_medium": "static/photos/tamm_image_32_medium.jpg",
+		"caption": "Årsta, 2015"
+	},
+	{
+		"id": 33,
+		"thumbnail": "static/photos/tamm_image_33_thumb.jpg",
+		"image": "static/photos/tamm_image_33.jpg",
+		"image_medium": "static/photos/tamm_image_33_medium.jpg",
+		"caption": "Kopparberg, 2015"
 	}
 ]
