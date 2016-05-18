@@ -131,7 +131,7 @@
         "no-catch-shadow": 2, // disallow the catch clause parameter name being the same as a variable in the outer scope (off by default in the node environment)
         "no-delete-var": 2, // disallow deletion of variables
         "no-label-var": 2, // disallow labels that share a name with a variable
-        "no-shadow": 2, // disallow declaration of variables already declared in the outer scope
+        "no-shadow": [2, { "allow": ["data", "callback"] }], // disallow declaration of variables already declared in the outer scope
         "no-shadow-restricted-names": 2, // disallow shadowing of names such as arguments
         "no-undef": 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
         "no-undef-init": 2, // disallow use of undefined when initializing variables
@@ -144,7 +144,7 @@
         //
         // These rules are purely matters of style and are quite subjective.
         //
-        "indent": [1, 4], // this option sets a specific tab width for your code (off by default)
+        "indent": [1, 4, { "VariableDeclarator": { "var": 1, "let": 1, "const": 3 } }], // this option sets a specific tab width for your code (off by default)
         "brace-style": 1, // enforce one true brace style (off by default)
         "camelcase": 0, // require camel case names
         "comma-spacing": [1, {"before": false, "after": true}], // enforce spacing before and after comma
