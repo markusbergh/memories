@@ -262,7 +262,7 @@ Slider.prototype = {
         }
 
         var images = Model.data;
-        self.numImages = images.length;
+        self.numImages = Object.keys(images).length;
 
         // Depending on viewport size we load different image quality
         var mql = window.matchMedia("screen and (max-width: 765px)");
