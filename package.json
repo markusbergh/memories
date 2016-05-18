@@ -1,22 +1,28 @@
 {
-  "name": "1-9-8-4",
+  "name": "Memories",
+  "private": true,
   "version": "1.0.0",
   "devDependencies": {
+    "babel-core": "^6.8.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "eslint-plugin-dollar-sign": "0.0.5",
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-requirejs": "~0.4.3",
     "grunt-contrib-sass": "0.5.0",
     "grunt-contrib-watch": "0.5.3",
     "grunt-processhtml": "^0.3.3",
-    "gulp-plumber": "^1.1.0"
+    "gulp-cssmin": "^0.1.7",
+    "gulp-plumber": "^1.1.0",
+    "imports-loader": "^0.6.5",
+    "webpack": "^1.13.0",
+    "webpack-stream": "^3.2.0"
   },
-  "directories": {
-    "src": "source_web",
-    "src_css": "source_web/css",
-    "src_sass": "source_web/sass",
-    "src_js": "source_web/js",
-    "build": "deploy_web",
-    "build_css": "deploy_web/css",
-    "build_js": "deploy_web/js"
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "jquery.transit": "^0.9.12",
+    "masonry-layout": "^4.1.0",
+    "snapsvg": "^0.4.0"
   }
 }
