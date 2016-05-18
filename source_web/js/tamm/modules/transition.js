@@ -1,54 +1,41 @@
-/*
-* TAMM - Transition
-* This file contains transition animation
-*
-* Usage: var transition = new Transition();
-*
-* Author
-* Markus Bergh, 2016
-*/
+/**
+ * Transition
+ * This file contains transition animation
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 import Snap from 'snapsvg';
 
 import PubSub from 'tamm/utils/pubsub';
 
-var instance = null,
+let instance = null,
     s = null,
     curtain = null;
 
 function Transition() {
+    let $elem = $('#transition');
+
     if(instance !== null) {
-        throw new Error("Cannot instantiate more than one Transition, use Transition.getInstance()");
+        throw new Error(`Cannot instantiate more than one Transition,
+                         use Transition.getInstance()`);
     }
 
-    this.init();
-};
-
-Transition.prototype = {
-    defaults: {
-        $elem: $('#transition')
-    },
-
-    init: function() {
-        var self = this;
-
+    function init() {
         s = Snap('#transition');
 
         curtain = s.path('m 75,-80 155,0 0,225 C 90,85 100,30 75,-80 z');
         curtain.attr({
-            'fill': 'white'
+            fill: 'white'
         });
+    }
 
-        return self;
-    },
-
-    show: function() {
-        var self = this;
-
-        self.defaults.$elem.css({
+    this.show = function() {
+        $elem.css({
             'z-index': window.Z_INDEX_TRANSITION,
-            'display': 'block'
+            display: 'block'
         });
 
         curtain.animate({
@@ -56,22 +43,18 @@ Transition.prototype = {
         }, 700, mina.easeout, function() {
             PubSub.publish('/tamm/section/show', [], this);
         });
+    };
 
-        return self;
-    },
-
-    hide: function() {
-        var self = this;
-
+    this.hide = function() {
         curtain.animate({
             path: 'm 75,-80 155,0 0,225 C 90,85 100,30 75,-80 z'
         }, 700, mina.easein, function() {
-            self.defaults.$elem.removeAttr('style');
+            $elem.removeAttr('style');
         });
+    };
 
-        return self;
-    }
-};
+    init();
+}
 
 Transition.getInstance = function() {
     // summary:

@@ -1,4 +1,8 @@
 {
+    "globals": {
+        "mina": true
+    },
+
     "parserOptions": {
         "ecmaVersion": 6,
         "sourceType": "module"
