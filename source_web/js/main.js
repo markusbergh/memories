@@ -1,26 +1,24 @@
-/*
+/**
  * Main
- * This file contains the main script for site
+ * This file contains the entry script for application
  *
  * Author
- * Markus Bergh
- * 2014
+ * Markus Bergh, 2016
  */
 
-require(['jquery', './tamm/tamm__App'], function($, CoreApp) {
+import $ from 'jquery';
+import App from 'tamm/app';
 
-	$(function() {
+$(() => {
+    // Defaults z-index
+    window.Z_INDEX_NAV_TOGGLE = 699;
+    window.Z_INDEX_SECTION = 599;
+    window.Z_INDEX_TRANSITION = 499;
 
-		// Defaults
-		window.Z_INDEX_NAV_TOGGLE = 699;
-		window.Z_INDEX_SECTION = 599;
-		window.Z_INDEX_TRANSITION = 499;
+    // Kick in application
+    App();
 
-		// Kickstart application
-		var app = new CoreApp().initialize();
-
-		// Add class for script support
-		$('html').removeClass('no-js').addClass('js');
-	});
-
+    // Add class for script support
+    $('html').removeClass('no-js')
+             .addClass('js');
 });
