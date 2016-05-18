@@ -11,7 +11,7 @@ import $ from 'jquery';
 import PubSub from 'tamm/utils/pubsub';
 import Preloader from 'tamm/modules/preloader';
 
-let Image = function() {
+let SlideImage = function() {
     let request,
         image,
         target,
@@ -95,4 +95,4 @@ let Image = function() {
     };
 };
 
-export default Image;
+export default SlideImage;
