@@ -1,10 +1,9 @@
-/*
- * TAMM - Image
+/**
+ * Image
  * This file contains the image handling
  *
  * Author
- * Markus Bergh
- * 2014
+ * Markus Bergh, 2016
  */
 
 import $ from 'jquery';

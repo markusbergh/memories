@@ -1,12 +1,10 @@
-/*
-* TAMM - Archive
-* This file contains grid for archive
-*
-* Usage: var archive = new Archive(elem, {});
-*
-* Author
-* Markus Bergh, 2014
-*/
+/**
+ * Archive
+ * This file contains grid for archive
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 import Masonry from 'masonry-layout';

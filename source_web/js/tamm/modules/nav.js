@@ -1,10 +1,10 @@
-/*
-* Navigation
-* This file contains the navigation
-*
-* Author
-* Markus Bergh, 2016
-*/
+/**
+ * Navigation
+ * This file contains the navigation
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 import 'jquery.transit';
