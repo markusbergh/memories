@@ -40,5 +40,7 @@ Thumbs.db
 #####################
 node_modules/
 deploy_web/
+source_unused/
+source_web/static/photos
 .sass-cache/
 .DS_Store
