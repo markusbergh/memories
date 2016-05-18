@@ -29,11 +29,11 @@ class Memories {
         $.getJSON('/data/memories.json', function(response) {
             let reversed = response.reverse();
 
-            for(let prop in reversed) {
-                if(reversed.hasOwnProperty(prop)) {
-                    let memory = reversed[prop];
+            for(let index in reversed) {
+                if(reversed.hasOwnProperty(index)) {
+                    let memory = reversed[index];
 
-                    data[prop] = {
+                    data[index] = {
                         image: memory.image,
                         image_medium: memory.image_medium,
                         thumbnail: memory.thumbnail,

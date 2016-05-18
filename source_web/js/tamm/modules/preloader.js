@@ -1,142 +1,101 @@
 /*
-* T A M M - Preloader
-* This file contains the preloader for images
-*
-* Usage: var preloader = new Preloader(elem, {});
-*
-* Author
-* Markus Bergh, 2014
-*/
+ * Preloader
+ * This file contains the preloader for images
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 import 'jquery.transit';
 
 import PubSub from 'tamm/utils/pubsub';
 
-/*
-* Constructor
-*/
-let Preloader = function(elem, options) {
-    this.elem = elem;
-    this.$elem = $(elem);
-    this.options = options;
-    this.maxWidthText = 0;
-};
+let $preloader = $('.preloader-wrapper'),
+    max_width_text = 0,
+    $preloader_text = null;
 
-/*
-* Prototype
-*/
-Preloader.prototype = {
-    defaults: {
-        $preloader: $('.preloader-wrapper'),
-        $progress: $('.progress'),
-        $preloader_text: null,
-        $target: null
-    },
+let Preloader = function() {
+    let $progress = $('.progress');
 
-    init: function() {
-        var self = this;
+    this.max_width_text = max_width_text;
+    this.$preloader = $preloader;
+    this.$preloader_text = $preloader_text;
 
-        // Introduce defaults that can be extended either globally or using an object literal.
-        this.config = $.extend({}, this.defaults, this.options, this.metadata);
+    function init() {
+        addEvents();
+    }
 
+    function addEvents() {
+        addCustomEvents();
+    }
+
+    function addCustomEvents() {
         PubSub.subscribe('/tamm/preloader/show', function() {
-            self.show();
+            show();
         });
 
         PubSub.subscribe('/tamm/preloader/progress', function(data) {
-            self.progress(data);
+            progress(data);
         });
 
         PubSub.subscribe('/tamm/preloader/hide', function(imageLoaded) {
-            self.hide(imageLoaded);
+            hide(imageLoaded);
         });
+    }
 
-        return self;
-    },
+    function progress(current_progress) {
+        if(max_width_text) {
+            let perentage = current_progress / $(window).width();
 
-    show: function() {
-        var self = this;
-
-        self.config.$preloader_text = $('.preloader-text');
-        self.maxWidthText = self.config.$preloader_text.width();
-
-        self.config.$preloader.removeClass('hidden');
-
-        if(!self.maxWidthText) {
-
-            self.config.$progress.css({
-                width: 0
+            $preloader_text.find('.preloader-text-item-secondary').css({
+                width: perentage * max_width_text
             });
-
-        }
-
-        return  self;
-    },
-
-    progress: function(progress) {
-        var self = this;
-
-        if(self.maxWidthText) {
-
-            var perentage = progress / $(window).width();
-            self.config.$preloader_text.find('.preloader-text-item-secondary').css({
-                width: perentage * self.maxWidthText
-            });
-
         } else {
-            self.config.$progress.css({
-                width: progress
+            $progress.css({
+                width: current_progress
             }).addClass('running');
-        };
+        }
+    }
 
-        return self;
-    },
-
-    hide: function(imageLoaded) {
-        var self = this;
-
-        if(!self.maxWidthText) {
-            self.config.$progress.transition({
+    function hide(imageLoaded) {
+        if(!max_width_text) {
+            $progress.transition({
                 width: '100%'
-            }, 300, function() {
-                self.config.$preloader.addClass('hidden');
+            }, 300, () => {
+                $preloader.addClass('hidden');
 
-                self.config.$progress.css({
+                $progress.css({
                     width: 0
                 });
 
                 PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
             }).removeClass('running');
         } else {
-            self.config.$preloader_text.transition({
-                width: self.maxWidthText
-            }, 300, function() {
-                self.config.$preloader.addClass('hidden');
+            $preloader_text.transition({
+                width: max_width_text
+            }, 300, () => {
+                $preloader.addClass('hidden');
 
                 PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
             });
         }
+    }
 
-        return self;
-    },
+    function show() {
+        $preloader_text = $('.preloader-text');
+        max_width_text = $preloader_text.width();
 
-    destroy: function() {
-        var self = this;
+        $preloader.removeClass('hidden');
 
-        return self;
-    },
-};
+        if(!max_width_text) {
+            $progress.css({
+                width: 0
+            });
+        }
+    }
 
-/*
-* Defaults
-*/
-Preloader.defaults = Preloader.prototype.defaults;
-
-$.fn.Preloader = function(options) {
-    return this.each(function() {
-        new Preloader(this, options).init();
-    });
+    init();
 };
 
 export default Preloader;

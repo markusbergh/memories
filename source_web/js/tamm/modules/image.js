@@ -12,11 +12,11 @@ import $ from 'jquery';
 import PubSub from 'tamm/utils/pubsub';
 import Preloader from 'tamm/modules/preloader';
 
-let TAMMImage = function() {
+let Image = function() {
     let request,
         image,
         target,
-        corePreloader = new Preloader('', {}).init();
+        preloader = new Preloader();
 
     function base64Encode(inputStr) {
         let b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -76,10 +76,11 @@ let TAMMImage = function() {
         let current_target = _target || null;
 
         if(current_target) {
-            Preloader.config.$preloader.appendTo(current_target);
-        } else if(current_target === null && !corePreloader.config.$preloader.parent().is('body')) {
+            preloader.$preloader.appendTo(current_target);
+        } else if(current_target === null &&
+                  !preloader.$preloader.parent().is('body')) {
             $('#transition').before(
-                corePreloader.config.$preloader
+                preloader.$preloader
             );
         }
 
@@ -95,4 +96,4 @@ let TAMMImage = function() {
     };
 };
 
-export default TAMMImage;
+export default Image;

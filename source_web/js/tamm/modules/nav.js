@@ -1,8 +1,6 @@
 /*
-* TAMM - Navigation
+* Navigation
 * This file contains the navigation
-*
-* Usage: var nav = new Nav(elem, {});
 *
 * Author
 * Markus Bergh, 2016
@@ -13,88 +11,78 @@ import 'jquery.transit';
 
 import PubSub from 'tamm/utils/pubsub';
 
-/*
- * Constructor
- */
-let Navigation = function(elem, options) {
-    this.elem = elem;
-    this.$elem = $(elem);
-    this.options = options;
-    this.transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
-};
+let Navigation = function() {
+    const transition_end = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
 
-/*
- * Prototype
- */
-Navigation.prototype = {
-    defaults: {
-        $nav: $('nav[role="navigation"]'),
-        $nav_items: $('nav[role="navigation"] ul a'),
-        $nav_toggle: $('#nav-toggle'),
-        $nav_title: $('.logo'),
-        $nav_years: $('.years-of-memories')
-    },
+    let $nav = $('nav[role="navigation"]'),
+        $nav_items = $('nav[role="navigation"] ul a'),
+        $nav_toggle = $('#nav-toggle'),
+        $nav_title = $('.logo'),
+        $nav_years = $('.years-of-memories');
 
-    init: function() {
-        // Introduce defaults that can be extended either globally or using an object literal.
-        this.config = $.extend({}, this.defaults, this.options, this.metadata);
-
+    function init() {
         // Hide visually
-        this.defaults.$nav.removeClass('hidden').addClass('visuallyhidden');
+        $nav.removeClass('hidden')
+            .addClass('visuallyhidden');
 
+        addEvents();
+    }
+
+    function addEvents() {
         // Add listeners
-        this.addListenerForNavItems();
-        this.addListenerForToggle();
+        addListenerForNavItems();
+        addListenerForToggle();
 
+        // Add custom events
+        addCustomEvents();
+    }
+
+    function addCustomEvents() {
         PubSub.subscribe('/tamm/navigation/reset', function() {
-            this.reset();
+            reset();
         });
-    },
+    }
 
-    addListenerForNavItems: function() {
-        let self = this;
+    function addListenerForNavItems() {
+        $nav_items.on('click', handleNavItemClick);
+    }
 
-        self.config.$nav_items.on('click', function(e) {
-            e.preventDefault();
+    function addListenerForToggle() {
+        $nav_toggle.unbind();
+        $nav_toggle.on('click', handleNavToggleClick);
+    }
 
-            let $nav_item = $(this);
+    function handleNavItemClick(ev) {
+        ev.preventDefault();
 
-            // Inverted style for toggle
-            self.config.$nav_toggle.addClass('inverted');
+        let $nav_item = $(this);
 
-            // Change toggle event
-            self.changeListenerToClosingSection();
+        // Inverted style for toggle
+        $nav_toggle.addClass('inverted');
 
-            // Publish event(s)
-            PubSub.publish('/tamm/transition/show');
+        // Change toggle event
+        changeListenerToClosingSection();
 
-            // Create section-
-            PubSub.publish('/tamm/section/create', [$nav_item.data('section')], this);
-        });
+        // Publish event(s)
+        PubSub.publish('/tamm/transition/show');
+        PubSub.publish('/tamm/section/create', [
+            $nav_item.data('section')
+        ], this);
+    }
 
-        return self;
-    },
+    function handleNavToggleClick(ev) {
+        ev.preventDefault();
 
-    addListenerForToggle: function() {
-        var self = this;
+        // Animate icon to close state
+        $(this).toggleClass('close');
 
-        this.config.$nav_toggle.unbind();
-        this.config.$nav_toggle.on('click', function(e) {
-            e.preventDefault;
+        // Toggle menu
+        toggle();
+    }
 
-            // Animate icon to close state
-            $(this).toggleClass('close');
-
-            // Toggle menu
-            self.toggle();
-        });
-    },
-
-    toggle: function() {
-        var self = this;
-
+    function toggle() {
         // Navigation links
-        var $nav_links = self.defaults.$nav.find('a');
+        let $nav_links = $nav.find('a');
 
         // Set some initial styling
         $nav_links.css({
@@ -105,18 +93,17 @@ Navigation.prototype = {
         });
 
         // Hide/show navigation
-        self.config.$nav.toggleClass('visuallyhidden');
+        $nav.toggleClass('visuallyhidden');
 
         // When wrapper has faded in
-        self.config.$nav.one(self.transitionEnd, function(e) {
-            var propertyName = e.originalEvent.propertyName;
-            var style = window.getComputedStyle($nav_links[0], null);
+        $nav.one(transition_end, function() {
+            let style = window.getComputedStyle($nav_links[0], null);
 
             if(style.opacity <= 0) {
-                var delay = 0;
+                let delay = 0;
 
                 $.each($nav_links, function(i, elem) {
-                    var $link = $(elem);
+                    let $link = $(elem);
 
                     $link.transition({
                         opacity: 1,
@@ -129,77 +116,66 @@ Navigation.prototype = {
                 });
             }
         });
+    }
 
-        return self;
-    },
+    function changeListenerToClosingSection() {
+        $nav_toggle.unbind();
 
-    changeListenerToClosingSection: function() {
-        this.config.$nav_toggle.unbind();
-
-        this.config.$nav_toggle.on('click', () => {
+        $nav_toggle.on('click', () => {
             // Default style for toggle
-            this.config.$nav_toggle.removeClass('inverted');
+            $nav_toggle.removeClass('inverted');
 
             // Default toggle action
-            this.addListenerForToggle();
+            addListenerForToggle();
 
             // Publish event
             PubSub.publish('/tamm/section/hide');
         });
-    },
+    }
 
-    reset: function() {
+    function reset() {
         // Default toggle action
-        this.addListenerForToggle();
+        addListenerForToggle();
 
         // Default color and state
-        this.config.$nav_toggle.removeClass('close');
-        this.config.$nav_toggle.removeClass('inverted');
+        $nav_toggle.removeClass('close');
+        $nav_toggle.removeClass('inverted');
 
         // Hide menu
-        this.config.$nav.addClass('visuallyhidden');
-    },
+        $nav.addClass('visuallyhidden');
+    }
 
-    hideHeaderElements: function() {
-        this.config.$nav_years.css({
+    this.hideHeaderElements = function() {
+        $nav_years.css({
             opacity: 0
         });
 
-        this.config.$nav_title.css({
+        $nav_title.css({
             opacity: 0
         });
 
-        this.config.$nav_toggle.css({
+        $nav_toggle.css({
             opacity: 0
         });
-    },
+    };
 
-    showHeaderElements: function() {
-        this.config.$nav_years.transition({
+    this.showHeaderElements = function() {
+        $nav_years.transition({
             opacity: 1,
             delay: 600
         }, 500);
 
-        this.config.$nav_title.transition({
+        $nav_title.transition({
             opacity: 1,
             delay: 300
         }, 500);
 
-        this.config.$nav_toggle.transition({
+        $nav_toggle.transition({
             opacity: 1
         }, 500);
-    }
-};
+    };
 
-/*
-* Defaults
-*/
-Navigation.defaults = Navigation.prototype.defaults;
-
-$.fn.Navigation = function(options) {
-    return this.each(function() {
-        new Navigation(this, options).init();
-    });
+    init();
 };
 
 export default Navigation;

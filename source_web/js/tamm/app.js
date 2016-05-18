@@ -134,9 +134,7 @@ let App = function() {
     }
 
     function createNavigation() {
-        // Navigation
-        navigation = new Nav('', {});
-        navigation.init();
+        navigation = new Nav();
         navigation.hideHeaderElements();
     }
 
