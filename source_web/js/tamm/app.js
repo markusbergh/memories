@@ -104,9 +104,7 @@ let App = function() {
 
         // Listen for section create
         PubSub.subscribe('/tamm/section/create', function(s) {
-            section = new Section('', {
-                section: s
-            }).init();
+            section = new Section({ section: s });
         });
 
         // Listen for section show

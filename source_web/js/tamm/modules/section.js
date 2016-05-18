@@ -16,184 +16,139 @@ import About from 'tamm/modules/about';
 import Archive from 'tamm/modules/archive';
 import Contact from 'tamm/modules/contact';
 
-/*
-* Constructor
-*/
-var Section = function(elem, options) {
-    this.elem = elem;
-    this.$elem = $(elem);
-    this.options = options;
-};
+let $app = $('main'),
+    $section = $('<div />'),
+    $section_content_wrapper = $('<div />'),
+    $section_content = $('<div />'),
+    $section_data = null,
+    $section_preloader = $('<div />'),
+    $section_preloader_progress = $('<div />');
 
-/*
-* Prototype
-*/
-Section.prototype = {
-    defaults: {
-        $app: $('main'),
-        $section: $('<div />'),
-        $section_content_wrapper: $('<div />'),
-        $section_content: $('<div />'),
-        $section_data: null,
-        $section_preloader: $('<div />'),
-        $section_preloader_progress: $('<div />')
-    },
+let Section = function(options) {
+    let section = options.section;
 
-    init: function() {
-        var self = this;
+    function init() {
+        create();
+    }
 
-        // Introduce defaults that can be extended either globally or using an object literal.
-        this.config = $.extend({}, this.defaults, this.options, this.metadata);
+    function create() {
+        let callback;
 
-        self.create();
+        $section_content_wrapper = $('<div />');
+        $section_content = $('<div />');
 
-        return self;
-    },
-
-    create: function() {
-        var self = this;
-
-        self.config.$section_content_wrapper = $('<div />');
-        self.config.$section_content = $('<div />');
-
-        self.config.$app.append(
-            self.config.$section.empty().append(
-                self.config.$section_content_wrapper
+        $app.append(
+            $section.empty().append(
+                $section_content_wrapper
             ).addClass('section').css({
                 opacity: 0,
                 'z-index': window.Z_INDEX_SECTION
             })
         );
 
-        var callback;
+        switch(section) {
+            case 'about':
+                $section_data = new About();
 
-        switch(self.config.section) {
-        case 'about':
-            self.config.$section_data = new About();
+                callback = function(data) {
+                    onSectionReady(data);
+                };
 
-            callback = function(data) {
-                self.onSectionReady(data);
-            };
+                $section_content_wrapper.addClass('about');
+                $section_content.addClass('about');
+                break;
+            case 'archive':
+                $section_data = new Archive();
 
-            self.config.$section_content_wrapper.addClass('about');
-            self.config.$section_content.addClass('about');
-            break;
-        case 'archive':
-            self.config.$section_data = new Archive();
+                callback = function(data) {
+                    onSectionReady(data);
+                };
 
-            callback = function(data) {
-                self.onSectionReady(data);
-            };
+                // Create preloader for archive
+                $section_content_wrapper.append(
+                    $section_preloader.append(
+                        $section_preloader_progress.css({
+                            width: 0
+                        }).addClass('archive-preloader-progress')
+                    ).addClass('archive-preloader')
+                );
 
-            // Create preloader for archive
-            self.config.$section_content_wrapper.append(
-                self.config.$section_preloader.append(
-                    self.config.$section_preloader_progress.css({
-                        width: 0
-                    }).addClass('archive-preloader-progress')
-                ).addClass('archive-preloader')
-            );
-
-            // Listen for event
-            PubSub.subscribe('/tamm/archive/load', function(progress) {
-                self.config.$section_preloader.addClass('running');
-            });
-
-            // Set progress of loading archive
-            PubSub.subscribe('/tamm/archive/progress', function(progress) {
-                self.config.$section_preloader_progress.css({
-                    width: progress
+                // Listen for event
+                PubSub.subscribe('/tamm/archive/load', function() {
+                    $section_preloader.addClass('running');
                 });
-            });
 
-            // When archive is loaded and ready
-            PubSub.subscribe('/tamm/archive/loaded', function() {
-                self.config.$section_preloader.css({
-                    width: '100%'
-                }).transition({
-                    opacity: 0
-                }, 600, function() {
-                    self.config.$section_preloader.remove();
+                // Set progress of loading archive
+                PubSub.subscribe('/tamm/archive/progress', function(progress) {
+                    $section_preloader_progress.css({
+                        width: progress
+                    });
                 });
-            });
 
-            self.config.$section_content_wrapper.addClass('archive');
-            self.config.$section_content.addClass('archive');
-            break;
-        case 'contact':
-            self.config.$section_data = new Contact();
+                // When archive is loaded and ready
+                PubSub.subscribe('/tamm/archive/loaded', function() {
+                    $section_preloader.css({
+                        width: '100%'
+                    }).transition({
+                        opacity: 0
+                    }, 600, function() {
+                        $section_preloader.remove();
+                    });
+                });
 
-            callback = function(data) {
-                self.onSectionReady(data);
-            };
+                $section_content_wrapper.addClass('archive');
+                $section_content.addClass('archive');
 
-            self.config.$section_content_wrapper.addClass('contact');
-            self.config.$section_content.addClass('contact');
-            break;
+                break;
+            case 'contact':
+                $section_data = new Contact();
+
+                callback = function(data) {
+                    onSectionReady(data);
+                };
+
+                $section_content_wrapper.addClass('contact');
+                $section_content.addClass('contact');
+                break;
+            default:
+                break;
         }
 
-        self.config.$section_data.create(callback);
+        $section_data.create(callback);
+    }
 
-        return self;
-    },
-
-    onSectionReady: function(data) {
-        var self = this;
-
-        self.config.$section_content_wrapper.append(
-            self.config.$section_content.empty().append(
+    function onSectionReady(data) {
+        $section_content_wrapper.append(
+            $section_content.empty().append(
                 data
             ).addClass('section-content')
         ).addClass('section-content-wrapper');
+    }
 
-        return self;
-    },
+    function destroy() {
+        $section.remove();
+    }
 
-    show: function() {
-        var self = this;
-
-        self.config.$section.transition({
+    this.show = function() {
+        $section.transition({
             opacity: 1
         }, 700);
 
-        if(self.config.$section_data.show) {
-            self.config.$section_data.show();
+        if($section_data.show) {
+            $section_data.show();
         }
+    };
 
-        return self;
-    },
-
-    hide: function() {
-        var self = this;
-
-        self.config.$section.transition({
+    this.hide = function() {
+        $section.transition({
             opacity: 0
         }, 700, function() {
             PubSub.publish('/tamm/transition/hide');
-            self.destroy();
+            destroy();
         });
+    };
 
-        return self;
-    },
-
-    destroy: function() {
-        var self = this;
-
-        self.config.$section.remove();
-
-        return self;
-    }
-};
-
-/*
-* Defaults
-*/
-Section.defaults = Section.prototype.defaults;
-
-$.fn.Section = function(options) {
-    return this.each(function() {
-        new Section(this, options).init();
-    });
+    init();
 };
 
 export default Section;
