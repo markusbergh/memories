@@ -261,7 +261,7 @@ Slider.prototype = {
             }
         }
 
-        var images = Model.get();
+        var images = Model.data;
         self.numImages = images.length;
 
         // Depending on viewport size we load different image quality

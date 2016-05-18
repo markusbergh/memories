@@ -1,44 +1,39 @@
-/*
-* Model
-* This file contains the model for application
-*
-* Usage: var memories = Memories.getInstance();
-*
-* Author
-* Markus Bergh, 2016
-*/
+/**
+ * Model
+ * This file contains the model for application
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 
-let instance = null;
+// Block level variables for class state store
+const singleton = Symbol(),
+      singletonEnforcer = Symbol();
 
-function Memories() {
-    if(instance !== null) {
-        throw new Error('Cannot instantiate more than one Memories, use Memories.getInstance()');
+// Data
+let data = {};
+
+class Memories {
+    /**
+     * @param {Object} enforcer The symbol reference for class
+     */
+    constructor(enforcer) {
+        if(enforcer !== singletonEnforcer) {
+            throw new Error('Cannot construct singleton');
+        }
     }
 
-    this.initialize();
-}
+    static load(callback) {
+        $.getJSON('/data/memories.json', function(response) {
+            let reversed = response.reverse();
 
-Memories.prototype = {
-    /*
-    * Constructor
-    */
-    initialize: function() {
-        this.data = [];
-    },
+            for(let prop in reversed) {
+                if(reversed.hasOwnProperty(prop)) {
+                    let memory = reversed[prop];
 
-    load: function(callback) {
-        var self = this;
-
-        $.getJSON('/data/memories.json', function(data) {
-            data = data.reverse();
-
-            for(let prop in data) {
-                if(data.hasOwnProperty(prop)) {
-                    let memory = data[prop];
-
-                    self.data[prop] = {
+                    data[prop] = {
                         image: memory.image,
                         image_medium: memory.image_medium,
                         thumbnail: memory.thumbnail,
@@ -51,20 +46,21 @@ Memories.prototype = {
                 callback();
             }
         });
-    },
-
-    get: function() {
-        return this.data;
     }
-};
 
-Memories.getInstance = function() {
-    // summary:
-    //      Gets an instance of the singleton. It is better to use
-    if(instance === null) {
-        instance = new Memories();
+    static get data() {
+        return data;
     }
-    return instance;
-};
 
-export default Memories.getInstance();
+    /**
+     * @returns {Class} Singleton
+     */
+    static get instance() {
+        if (!this[singleton]) {
+            this[singleton] = new Memories(singletonEnforcer);
+        }
+        return this[singleton];
+    }
+}
+
+export default Memories;
