@@ -42,5 +42,6 @@ node_modules/
 deploy_web/
 source_unused/
 source_web/static/photos
+source_web/data/
 .sass-cache/
 .DS_Store
