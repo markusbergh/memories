@@ -1,12 +1,10 @@
-/*
-* TAMM - Section
-* This file contains the section container for subpages
-*
-* Usage: var section = new Section(elem, {});
-*
-* Author
-* Markus Bergh, 2016
-*/
+/**
+ * Section
+ * This file contains the section container for subpages
+ *
+ * Author
+ * Markus Bergh, 2016
+ */
 
 import $ from 'jquery';
 import 'jquery.transit';

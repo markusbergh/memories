@@ -1,4 +1,4 @@
-/*
+/**
  * Preloader
  * This file contains the preloader for images
  *
