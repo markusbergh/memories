@@ -66,12 +66,12 @@ let App = function() {
 
     function orientationChanged() {
         switch(window.orientation) {
-        case -90:
-        case 90:
-            window.scrollTo(0, 0);
-            break;
-        default:
-            break;
+            case -90:
+            case 90:
+                window.scrollTo(0, 0);
+                break;
+            default:
+                break;
         }
     }
 
