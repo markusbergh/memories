@@ -18,7 +18,8 @@ let Archive = function() {
         $content,
         loaded_images = 0,
         total_images,
-        on_ready;
+        on_ready,
+        self = this;
 
     function init() {
         addEvents();
@@ -84,7 +85,7 @@ let Archive = function() {
         data.target = $(this);
 
         // Load image
-        PubSub.publish('/tamm/archive/image/load', [data], self);
+        PubSub.publish('/tamm/archive/image/load', [data], this);
     }
 
     function createGridItem(item, index) {
@@ -134,7 +135,6 @@ let Archive = function() {
             for(let index in data) {
                 if({}.hasOwnProperty.call(data, index)) {
                     let item = data[index];
-
                     createGridItem(item, index);
                 }
             }
