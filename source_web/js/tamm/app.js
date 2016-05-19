@@ -18,8 +18,7 @@ import Model from 'tamm/model';
 import 'tamm/utils/utils';
 
 let App = function() {
-    let slider = null,
-        transition = null,
+    let transition = null,
         section = null,
         navigation = null,
         support_touch = false;
@@ -124,11 +123,9 @@ let App = function() {
     }
 
     function createSlider() {
-        slider = new Slider('', {
+        Slider('', {
             supportsTouch: support_touch
         });
-
-        slider.init();
     }
 
     function createNavigation() {
