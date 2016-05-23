@@ -16,6 +16,16 @@ $color_inverted: black;
     }
 }
 
+#grid-toggle {
+    position: absolute;
+    top: 55px;
+    left: 100px;
+    z-index: 699;
+    cursor: pointer;
+    background: red;
+    padding: 15px;
+}
+
 #nav-toggle {
     position: absolute;
     top: 55px;

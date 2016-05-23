@@ -30,34 +30,6 @@ let App = function() {
     }
 
     function resizeHandler(callback) {
-        let $slider = $('.app-slider'),
-            $slider_images = $slider.find('img');
-
-        $slider_images.each(function() {
-            let $image = $(this),
-                $container = $image.parent(),
-                imageAspect = 1.5,
-                containerW = $container.width(),
-                containerH = $container.height(),
-                containerAspect = containerW / containerH;
-
-            if(containerAspect < imageAspect) {
-                $image.css({
-                    width: 'auto',
-                    height: containerH,
-                    top: 0,
-                    left: -(containerH*imageAspect-containerW) / 2
-                });
-            } else {
-                $image.css({
-                    width: containerW,
-                    height: 'auto',
-                    top: -(containerW/imageAspect-containerH) / 2,
-                    left: 0
-                });
-            }
-        });
-
         if(typeof callback === 'function') {
             callback();
         }

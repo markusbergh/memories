@@ -36,9 +36,12 @@ gulp.task('styles', function() {
 gulp.task('webpack', function() {
     return gulp
         .src('./source_web/js/main.js')
+        .pipe(plumber({
+            errorHandler: onError
+        }))
         .pipe(webpackStream({
             resolve: {
-                modulesDirectories: ['node_modules', './source_web/js']
+                modulesDirectories: ['node_modules', './source_web/js'],
             },
             module: {
                 loaders: [
@@ -62,6 +65,14 @@ gulp.task('webpack', function() {
                     {
                         test: require.resolve('masonry-layout'),
                         loader: 'imports-loader?define=>false&this=>window'
+                    },
+                    {
+                        test: /jquery\.js$/,
+                        loader: 'expose-loader?$'
+                    },
+                    {
+                        test: /jquery\.js$/,
+                        loader: 'expose-loader?jQuery'
                     }
                 ]
             },
