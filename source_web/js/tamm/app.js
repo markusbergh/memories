@@ -23,18 +23,6 @@ let App = function() {
         navigation = null,
         support_touch = false;
 
-    function setResize() {
-        $(window).smartresize(function() {
-            resizeHandler();
-        });
-    }
-
-    function resizeHandler(callback) {
-        if(typeof callback === 'function') {
-            callback();
-        }
-    }
-
     function orientationChanged() {
         switch(window.orientation) {
             case -90:
@@ -52,9 +40,6 @@ let App = function() {
 
         // Orientation
         window.addEventListener('orientationchange', orientationChanged);
-
-        // Image size handling for resize event
-        setResize();
     }
 
     function addCustomEvents() {
@@ -86,11 +71,6 @@ let App = function() {
         // Listen for section hide
         PubSub.subscribe('/tamm/section/hide', function() {
             section.hide();
-        });
-
-        // Listen for image size handling
-        PubSub.subscribe('/tamm/image/resize', function(callback) {
-            resizeHandler(callback);
         });
     }
 
@@ -131,9 +111,6 @@ let App = function() {
 
             // Transition (singleton)
             transition = Transition;
-
-            // Initial call to resize
-            resizeHandler();
         });
     }
 

@@ -160,9 +160,6 @@ let Slider = function(options) {
                 )
             );
 
-            // Do resizing
-            PubSub.publish('/tamm/image/resize');
-
             // If call was passed
             if(typeof callback === 'function') {
                 $slider_caption.transition({
@@ -184,29 +181,27 @@ let Slider = function(options) {
                 callback.apply();
             } else {
                 // Otherwise just do some size handling and fade in
-                PubSub.publish('/tamm/image/resize', [function() {
-                    $slider_image.transition({
-                        opacity: 1,
-                        scale: 1
-                    }, 500, 'out', function() {
-                        // Dispatch event
-                        PubSub.publish('/tamm/initial/image/faded');
+                $slider_image.transition({
+                    opacity: 1,
+                    scale: 1
+                }, 500, 'out', function() {
+                    // Dispatch event
+                    PubSub.publish('/tamm/initial/image/faded');
 
-                        // Remove preloader text elements
-                        $preloader_text.remove();
+                    // Remove preloader text elements
+                    $preloader_text.remove();
 
-                        // Set pagination
-                        setPagination();
+                    // Set pagination
+                    setPagination();
 
-                        // Show caption
-                        $slider_caption.removeClass('hidden');
+                    // Show caption
+                    $slider_caption.removeClass('hidden');
 
-                        $slider_caption.text(images[currentIndex].caption);
-                        $slider_caption.transition({
-                            opacity: 1
-                        }, 300);
-                    });
-                }], this);
+                    $slider_caption.text(images[currentIndex].caption);
+                    $slider_caption.transition({
+                        opacity: 1
+                    }, 300);
+                });
             }
         });
 
