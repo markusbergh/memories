@@ -63,10 +63,6 @@ gulp.task('webpack', function() {
                         loader: 'imports-loader?this=>window,fix=>module.exports=0'
                     },
                     {
-                        test: require.resolve('masonry-layout'),
-                        loader: 'imports-loader?define=>false&this=>window'
-                    },
-                    {
                         test: /jquery\.js$/,
                         loader: 'expose-loader?$'
                     },

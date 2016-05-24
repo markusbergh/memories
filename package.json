@@ -17,7 +17,6 @@
   "dependencies": {
     "jquery": "^2.2.3",
     "jquery.transit": "^0.9.12",
-    "masonry-layout": "^4.1.0",
     "snapsvg": "^0.4.0"
   }
 }
