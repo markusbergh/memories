@@ -23,17 +23,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    width: 100%;
-    text-align: center;
     margin: 0;
-    font-weight: 100;
+    font-weight: 300;
 }
 
 h1 {
     @include font-size(72px);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
 }
 
 h2 {
@@ -54,6 +49,12 @@ ul {
 a {
     text-decoration: none;
     color: $color__text-action-primary;
+
+    &:focus,
+    &:hover,
+    &:active {
+        outline: none;
+    }
 }
 
 p {

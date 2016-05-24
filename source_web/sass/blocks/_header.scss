@@ -1,26 +1,19 @@
-header[role="banner"] {
-    margin: 0;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 200px;
 
     &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 150px;
-        z-index: 199;
-        @include linear-gradient(rgba(0, 0, 0, 0.3), transparent);
+        @extend %gradient-background;
     }
 
-    h1 {
-        @include font-size(24px);
-        position: relative;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-weight: 600;
+    .logo {
         z-index: 299;
-        margin: 50px 0 0 0;
         opacity: 0;
+        font-family: "Playfair Display", Georgia, sans-serif;
+        margin-left: 100px;
+        @include font-size(60px);
 
         @media only screen and (max-width: $break-mobile-landscape) {
             margin: 32px 10px 0 0;
@@ -33,31 +26,25 @@ header[role="banner"] {
     }
 
     .slogan {
-        @include font-size(12px);
-        margin: 10px 0 0 0;
         display: block;
-        letter-spacing: 0.4em;
-
-        @media only screen and (max-width: $break-mobile-landscape) {
-            letter-spacing: 0.2em;
-            margin: -2px 0 0 0;
-        }
+        font-family: "Lato", Arial, sans-serif;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: 0.5em;
+        font-weight: 800;
+        margin-top: 5px;
+        @include font-size(14px);
     }
 
     .years-of-memories {
-        @include font-size(14px);
-        position: absolute;
-        right: 40px;
-        top: 65px;
         z-index: 299;
-        font-weight: 500;
-        display: block;
-        letter-spacing: 0.2em;
+        font-weight: 400;
         opacity: 0;
+        margin-right: 100px;
+        @include font-size(24px);
 
         @media only screen and (max-width: $break-mobile-landscape) {
             display: none;
         }
     }
 }
-

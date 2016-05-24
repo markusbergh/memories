@@ -31,7 +31,6 @@
 }
 
 .app-slider-caption-text {
-    display: none;
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -41,7 +40,7 @@
     @include linear-gradient(transparent, rgba(0, 0, 0, 0.55));
 
     p {
-        @include font-size(20px);
+        @include font-size(22px);
         display: inline-block;
     }
 
@@ -50,8 +49,7 @@
         display: block;
         padding: 20px 0 0 0;
         line-height: 150px;
-        letter-spacing: 0.1em;
-        font-weight: 300;
+        font-weight: 400;
 
         &.hidden {
             opacity: 0;
