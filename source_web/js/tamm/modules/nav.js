@@ -87,6 +87,8 @@ let Navigation = function() {
         ev.preventDefault();
 
         PubSub.publish('/tamm/grid/load');
+        PubSub.publish('/tamm/slider/caption/hide');
+        PubSub.publish('/tamm/slider/pagination/hide');
     }
 
     function toggle() {

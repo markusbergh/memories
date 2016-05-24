@@ -14,34 +14,40 @@ import PubSub from 'tamm/utils/pubsub';
 let total_images = 0,
     loaded_images = 0,
     $current_grid_item = null,
-    $current_slider_image = null;
+    $current_slider_image = null,
+    $current_slider_image_wrapper = null;
 
-const $grid = $('<div />'),
+const PATH_DATA = '/data/memories.json',
+      EVENTS = {
+          LOAD: '/tamm/grid/load'
+      },
+      $grid = $('<div />'),
       $grid_container = $('<div />'),
       $grid_left_column = $('<div />'),
-      $grid_right_column = $('<div />');
+      $grid_right_column = $('<div />'),
+      $main = $('main');
 
 let Grid = function() {
     function init() {
         setupEvents();
     }
 
-
     init();
 };
 
 function setupEvents() {
-    PubSub.subscribe('/tamm/grid/load', handleGridLoad);
+    PubSub.subscribe(EVENTS.LOAD, handleGridLoad);
 }
 
 function handleGridLoad() {
-    $.getJSON('/data/memories.json', handleGridLoadComplete);
+    $.getJSON(PATH_DATA, handleGridLoadComplete);
 }
 
 function handleGridLoadComplete(data) {
     addGridContent();
 
     // Get current image
+    $current_slider_image_wrapper = $('.app-slider-image');
     $current_slider_image = $('.app-slider-image img');
 
     // Reverse content
@@ -63,11 +69,26 @@ function handleGridLoadComplete(data) {
     }
 }
 
+function handleGridItemClick(ev) {
+    ev.preventDefault();
+
+    let $current_grid_item = $(this);
+
+    $current_grid_item.css({
+        position: 'absolute'
+    }).transition({
+        width: '100%',
+        height: '100%'
+    }, 800, 'easeInOutQuint');
+}
+
 function createGridItem(item, index, current_index) {
     let thumbnail = item.image_medium,
         $grid_item = $('<a />');
 
-    $grid_item.addClass('grid_item');
+    $grid_item.addClass('grid-item');
+    $grid_item.attr('href', '#');
+    $grid_item.on('click', handleGridItemClick);
 
     if(index % 2 === 0) {
         $grid_left_column.append($grid_item);
@@ -92,10 +113,7 @@ function createGridItemImage($grid_item, index, current_index, thumbnail) {
             $current_grid_item = $grid.find('a:empty');
 
             if(!isVisibleInView($current_grid_item[0])) {
-                $(window).scrollTop(
-                    $current_grid_item.offset().top -
-                    $current_grid_item.height() / 2
-                );
+                scrollToGridItem();
             }
 
             animateCurrentFullscreenImage();
@@ -103,6 +121,13 @@ function createGridItemImage($grid_item, index, current_index, thumbnail) {
     };
 
     image.src = thumbnail;
+}
+
+function scrollToGridItem() {
+    $(window).scrollTop(
+        $current_grid_item.offset().top -
+        $current_grid_item.height() / 2
+    );
 }
 
 function animateCurrentFullscreenImage() {
@@ -116,21 +141,25 @@ function animateCurrentFullscreenImage() {
     }, 800, 'easeInOutQuint', function() {
         $current_slider_image.removeAttr('style');
         $current_grid_item.append($current_slider_image);
+
+        $grid_container.css({
+            zIndex: 99
+        });
     });
 }
 
 function addGridContent() {
-    $grid_container.addClass('grid_container');
+    $grid_container.addClass('grid-container');
     $grid.addClass('grid');
 
     $grid_container.append(
         $grid.append(
-            $grid_left_column.addClass('grid_column column_left'),
-            $grid_right_column.addClass('grid_column column_right')
+            $grid_left_column.addClass('grid-column grid-column--left'),
+            $grid_right_column.addClass('grid-column grid-column--right')
         )
     );
 
-    $('main').append($grid_container);
+    $main.append($grid_container);
 }
 
 function isVisibleInView(elem) {

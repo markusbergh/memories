@@ -11,6 +11,12 @@ import $ from 'jquery';
 import PubSub from 'tamm/utils/pubsub';
 import Preloader from 'tamm/modules/preloader';
 
+const EVENTS = {
+    SHOW: '/tamm/preloader/show',
+    HIDE: '/tamm/preloader/hide',
+    PROGRESS: '/tamm/preloader/progress'
+};
+
 let SlideImage = function() {
     let request,
         image,
@@ -52,18 +58,18 @@ let SlideImage = function() {
     }
 
     function onStart() {
-        PubSub.publish('/tamm/preloader/show');
+        PubSub.publish(EVENTS.SHOW);
     }
 
     function onProgress(e) {
         let percentage = e.loaded / e.total,
             frameWidth = target ? target.width() : $(window).width();
 
-        PubSub.publish('/tamm/preloader/progress', [frameWidth * percentage], this);
+        PubSub.publish(EVENTS.PROGRESS, [frameWidth * percentage], this);
     }
 
     function onLoadEnded() {
-        PubSub.publish('/tamm/preloader/hide', [image], this);
+        PubSub.publish(EVENTS.HIDE, [image], this);
     }
 
     this.onLoad = function() {

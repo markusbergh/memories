@@ -62,6 +62,16 @@ let Slider = function(options) {
     init();
 };
 
+function setupEvents() {
+    $slider_action.on('click', handleSliderActionClick);
+
+    setupKeyboard();
+
+    PubSub.subscribe('/tamm/archive/image/load', handleLoadFromArchive);
+    PubSub.subscribe('/tamm/slider/pagination/hide', hidePagination);
+    PubSub.subscribe('/tamm/slider/caption/hide', hideCaption);
+}
+
 function getURL() {
     // Get photo index from url
     let url = document.URL,
@@ -76,6 +86,15 @@ function getURL() {
     }
 
     // Load image
+    load();
+}
+
+function handleLoadFromArchive(data) {
+    is_loaded_from_archive = true;
+
+    current_index = parseInt(data.id, 10);
+    preloader_target = data.target;
+
     load();
 }
 
@@ -189,7 +208,9 @@ function handleImageLoaded(images, image, callback, inverse) {
             $slider_caption.text(images[current_index].caption);
             $slider_caption.transition({
                 opacity: 1
-            }, 300);
+            }, 300, function() {
+                $slider_caption.removeAttr('style');
+            });
         });
     }
 }
@@ -261,43 +282,34 @@ function setupPagination() {
     history.pushState({}, '', '/photos/' + (current_index + 1));
 }
 
-function setupEvents() {
-    $slider_action.on('click', handleSliderActionClick);
+function hidePagination() {
+    $slider_action_prev.addClass('hidden');
+    $slider_action_next.addClass('hidden');
+}
 
-    /**
-    * Keyboard event
-    */
-    setupKeyboard();
-
-    /**
-    * Listener for loading from archive
-    */
-    PubSub.subscribe('/tamm/archive/image/load', function(data) {
-        is_loaded_from_archive = true;
-
-        current_index = parseInt(data.id, 10);
-        preloader_target = data.target;
-
-        load();
-    });
+function hideCaption() {
+    $slider_caption.addClass('hidden');
 }
 
 function setupKeyboard() {
-    $('body').keydown(function(e) {
-        if($('.slider-is-running').length <= 0 && $('.loaded-and-ready').length > 0) {
-            if(e.keyCode === 37) {
-                if(current_index > 0) {
-                    goPrev();
-                }
-            } else if(e.keyCode === 39) {
-                if(current_index + 1 < num_images) {
-                    goNext();
-                }
-            }
+    $('body').keydown(handleKeyDown);
+}
 
-            setupPagination();
+function handleKeyDown(ev) {
+    if($('.slider-is-running').length <= 0 &&
+       $('.loaded-and-ready').length > 0) {
+        if(ev.keyCode === 37) {
+            if(current_index > 0) {
+                goPrev();
+            }
+        } else if(ev.keyCode === 39) {
+            if(current_index + 1 < num_images) {
+                goNext();
+            }
         }
-    });
+
+        setupPagination();
+    }
 }
 
 function handleSliderActionClick(ev) {
