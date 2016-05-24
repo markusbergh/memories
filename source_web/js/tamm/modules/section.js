@@ -11,7 +11,6 @@ import 'jquery.transit';
 
 import PubSub from 'tamm/utils/pubsub';
 import About from 'tamm/modules/about';
-import Archive from 'tamm/modules/archive';
 import Contact from 'tamm/modules/contact';
 
 let $app = $('main'),

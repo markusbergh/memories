@@ -13,6 +13,7 @@ import Transition from 'tamm/modules/transition';
 import Section from 'tamm/modules/section';
 import Slider from 'tamm/modules/slider';
 import Nav from 'tamm/modules/nav';
+import Grid from 'tamm/modules/grid';
 import Model from 'tamm/model';
 
 import 'tamm/utils/utils';
@@ -34,7 +35,7 @@ let App = function() {
         }
     }
 
-    function addEvents() {
+    function setupEvents() {
         // Custom events for application
         addCustomEvents();
 
@@ -75,9 +76,7 @@ let App = function() {
     }
 
     function createSlider() {
-        Slider('', {
-            supportsTouch: support_touch
-        });
+        Slider({ supportsTouch: support_touch });
     }
 
     function createNavigation() {
@@ -85,7 +84,11 @@ let App = function() {
         navigation.hideHeaderElements();
     }
 
-    function touchSupport() {
+    function createGrid() {
+        Grid();
+    }
+
+    function checkTouchSupport() {
         // Touch support check
         support_touch = 'ontouchstart' in window || !!navigator.msMaxTouchPoints;
 
@@ -95,21 +98,18 @@ let App = function() {
     }
 
     function init() {
-        // Check support of touch
-        touchSupport();
+        checkTouchSupport();
 
         // Get application data
         Model.load(function() {
-            // Create slider
             createSlider();
-
-            // Create navigation
             createNavigation();
+            createGrid();
 
             // Add custom event listeners
-            addEvents();
+            setupEvents();
 
-            // Transition (singleton)
+            // Transition
             transition = Transition;
         });
     }
