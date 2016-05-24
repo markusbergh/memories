@@ -1,26 +1,15 @@
- %visually-hidden {
-     position: absolute !important;
-     overflow: hidden;
-     width: 1px;
-     height: 1px;
-     padding: 0;
-     border: 0;
-     clip: rect(1px, 1px, 1px, 1px);
- }
+%visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+}
 
- %hide-text {
-     font: 0 / 0 a;
-     text-shadow: none;
-     color: transparent;
- }
-
-%gradient-background {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    z-index: 199;
-    @include linear-gradient(rgba(0, 0, 0, 0.3), transparent);
+%hide-text {
+    font: 0 / 0 a;
+    text-shadow: none;
+    color: transparent;
 }

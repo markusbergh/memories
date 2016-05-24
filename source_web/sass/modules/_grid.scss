@@ -1,4 +1,4 @@
-.grid_container {
+.grid-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,15 +16,15 @@
     margin-bottom: 300px;
 }
 
-.grid_column {
+.grid-column {
     width: 35%;
+
+    &--right {
+        margin-top: 100px;
+    }
 }
 
-.column_right {
-    margin-top: 100px;
-}
-
-.grid_item {
+.grid-item {
     display: block;
     margin-bottom: 100px;
     height: 600px;

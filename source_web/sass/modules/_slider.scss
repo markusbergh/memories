@@ -36,8 +36,6 @@
     bottom: 0;
     text-align: center;
     z-index: 111;
-    line-height: 1;
-    @include linear-gradient(transparent, rgba(0, 0, 0, 0.55));
 
     p {
         @include font-size(22px);

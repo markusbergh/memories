@@ -4,10 +4,6 @@
     align-items: center;
     height: 200px;
 
-    &:after {
-        @extend %gradient-background;
-    }
-
     .logo {
         z-index: 299;
         opacity: 0;
