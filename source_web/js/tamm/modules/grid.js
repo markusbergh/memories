@@ -47,7 +47,7 @@ function handleGridLoadComplete(data) {
     addGridContent();
 
     // Get current image
-    $current_slider_image_wrapper = $('.app-slider-image');
+    $current_slider_image_wrapper = $('.app-slider-image-wrapper');
     $current_slider_image = $('.app-slider-image img');
 
     // Reverse content
@@ -72,11 +72,31 @@ function handleGridLoadComplete(data) {
 function handleGridItemClick(ev) {
     ev.preventDefault();
 
-    let $current_grid_item = $(this);
+    let $current_grid_item = $(this),
+        current_width = $current_grid_item.width(),
+        current_height = $current_grid_item.height(),
+        left_pos = $current_grid_item.offset().left,
+        top_pos = $current_grid_item.offset().top -
+                  $current_slider_image_wrapper.offset().top;
 
-    $current_grid_item.css({
-        position: 'absolute'
-    }).transition({
+    $current_slider_image_wrapper.css({
+        display: 'block'
+    });
+
+    $('.app-slider-image').append(
+        $current_grid_item.find('img').css({
+            width: current_width,
+            height: current_height,
+            left: left_pos,
+            top: top_pos
+        })
+    );
+
+    $('.app-slider-image').find('img').transition({
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
         width: '100%',
         height: '100%'
     }, 800, 'easeInOutQuint');
@@ -142,8 +162,8 @@ function animateCurrentFullscreenImage() {
         $current_slider_image.removeAttr('style');
         $current_grid_item.append($current_slider_image);
 
-        $grid_container.css({
-            zIndex: 99
+        $current_slider_image_wrapper.css({
+            display: 'none'
         });
     });
 }
