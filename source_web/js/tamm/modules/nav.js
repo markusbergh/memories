@@ -14,8 +14,8 @@ import PubSub from 'tamm/utils/pubsub';
 let Navigation = function() {
     const transition_end = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
 
-    let $nav = $('nav[role="navigation"]'),
-        $nav_items = $('nav[role="navigation"] ul a'),
+    let $nav = $('.nav'),
+        $nav_items = $('.nav_item__link'),
         $nav_toggle = $('#nav-toggle'),
         $nav_title = $('.logo'),
         $nav_years = $('.years-of-memories'),
@@ -67,8 +67,7 @@ let Navigation = function() {
     }
 
     function addListenerForToggle() {
-        $nav_toggle.unbind();
-        $nav_toggle.on('click', handleNavToggleClick);
+
 
         $grid_toggle.on('click', handleGridToggleClick);
     }
@@ -165,23 +164,21 @@ let Navigation = function() {
             opacity: 0
         });
 
-        $nav_toggle.css({
+        $nav.css({
             opacity: 0
         });
     };
 
     this.showHeaderElements = function() {
-        $nav_years.transition({
-            opacity: 1,
-            delay: 600
-        }, 500);
-
         $nav_title.transition({
-            opacity: 1,
-            delay: 300
+            opacity: 1
         }, 500);
 
-        $nav_toggle.transition({
+        $nav_years.transition({
+            opacity: 1
+        }, 500);
+
+        $nav.transition({
             opacity: 1
         }, 500);
     };
