@@ -16,11 +16,8 @@
 @import "generic/normalize";
 @import "generic/base";
 
-// Blocks
-@import "blocks/header";
-@import "blocks/navigation";
-
 // Modules
+@import "modules/header";
 @import "modules/slider";
 @import "modules/preloader";
 @import "modules/grid";

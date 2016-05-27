@@ -12,19 +12,19 @@ import 'jquery.transit';
 import PubSub from 'tamm/utils/pubsub';
 
 let total_images = 0,
-    loaded_images = 0,
+    loaded_images = null,
     $current_grid_item = null,
     $current_slider_image = null,
-    $current_slider_image_wrapper = null;
+    $current_slider_image_wrapper = null,
+    $grid = null,
+    $grid_container = null,
+    $grid_left_column = null,
+    $grid_right_column = null;
 
 const PATH_DATA = '/data/memories.json',
       EVENTS = {
           LOAD: '/tamm/grid/load'
       },
-      $grid = $('<div />'),
-      $grid_container = $('<div />'),
-      $grid_left_column = $('<div />'),
-      $grid_right_column = $('<div />'),
       $main = $('main');
 
 let Grid = function() {
@@ -40,6 +40,11 @@ function setupEvents() {
 }
 
 function handleGridLoad() {
+    $grid = $('<div />');
+    $grid_container = $('<div />');
+    $grid_left_column = $('<div />');
+    $grid_right_column = $('<div />');
+
     $.getJSON(PATH_DATA, handleGridLoadComplete);
 }
 
@@ -49,6 +54,9 @@ function handleGridLoadComplete(data) {
     // Get current image
     $current_slider_image_wrapper = $('.app-slider-image-wrapper');
     $current_slider_image = $('.app-slider-image img');
+
+    // Reset load count
+    loaded_images = 0;
 
     // Reverse content
     data.reverse();
@@ -72,34 +80,12 @@ function handleGridLoadComplete(data) {
 function handleGridItemClick(ev) {
     ev.preventDefault();
 
-    let $current_grid_item = $(this),
-        current_width = $current_grid_item.width(),
-        current_height = $current_grid_item.height(),
-        left_pos = $current_grid_item.offset().left,
-        top_pos = $current_grid_item.offset().top -
-                  $current_slider_image_wrapper.offset().top;
+    let $current_grid_item = $(this);
 
-    $current_slider_image_wrapper.css({
-        display: 'block'
-    });
-
-    $('.app-slider-image').append(
-        $current_grid_item.find('img').css({
-            width: current_width,
-            height: current_height,
-            left: left_pos,
-            top: top_pos
-        })
-    );
-
-    $('.app-slider-image').find('img').transition({
-        x: 0,
-        y: 0,
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%'
-    }, 800, 'easeInOutQuint');
+    PubSub.publish('/tamm/grid/image/load', [{
+        id: $current_grid_item.data('id'),
+        target: $current_grid_item
+    }]);
 }
 
 function createGridItem(item, index, current_index) {
@@ -108,6 +94,7 @@ function createGridItem(item, index, current_index) {
 
     $grid_item.addClass('grid-item');
     $grid_item.attr('href', '#');
+    $grid_item.data('id', index);
     $grid_item.on('click', handleGridItemClick);
 
     if(index % 2 === 0) {

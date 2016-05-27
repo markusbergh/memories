@@ -23,10 +23,8 @@ let $slider_action_next_svg = null,
     current_index = 0,
     num_images = null,
     image_loaded = null,
-    is_loaded_from_archive = false,
     has_animated_pagination_next = false,
     has_animated_pagination_prev = false,
-    preloader_target = null,
     image = new Image();
 
 const $slider = $('.app-slider'),
@@ -36,8 +34,7 @@ const $slider = $('.app-slider'),
       $slider_action_prev = $('.app-slider-action.prev'),
       $slider_caption = $('.app-slider-caption-text span'),
       $preloader = $('.preloader-wrapper'),
-      $progress = $('.progress'),
-      $preloader_text = $('.preloader-text');
+      $progress = $('.progress');
 
 let Slider = function(options) {
     supports_touch = options.supports_touch;
@@ -67,7 +64,7 @@ function setupEvents() {
 
     setupKeyboard();
 
-    PubSub.subscribe('/tamm/archive/image/load', handleLoadFromArchive);
+    PubSub.subscribe('/tamm/grid/image/load', handleLoadFromArchive);
     PubSub.subscribe('/tamm/slider/pagination/hide', hidePagination);
     PubSub.subscribe('/tamm/slider/caption/hide', hideCaption);
 }
@@ -90,12 +87,69 @@ function getURL() {
 }
 
 function handleLoadFromArchive(data) {
-    is_loaded_from_archive = true;
-
     current_index = parseInt(data.id, 10);
-    preloader_target = data.target;
 
-    load();
+    let $current_grid_item = data.target,
+        $current_grid_item_image = $current_grid_item.find('img'),
+        $current_slider_image_wrapper = $('.app-slider-image-wrapper'),
+        current_width = $current_grid_item.width(),
+        current_height = $current_grid_item.height(),
+        left_pos = $current_grid_item.offset().left,
+        top_pos = $current_grid_item.offset().top -
+                  $current_slider_image_wrapper.offset().top;
+
+    $current_slider_image_wrapper.css({
+        display: 'block'
+    });
+
+    $('.app-slider-image').append(
+        $current_grid_item_image.css({
+            width: current_width,
+            height: current_height,
+            left: left_pos,
+            top: top_pos
+        })
+    );
+
+    $current_grid_item_image.transition({
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+    }, 800, 'easeInOutQuint', function() {
+        $('.grid-container').remove();
+
+        let images = Model.data,
+            image_source = images[data.id].image;
+
+        if(image_loaded) {
+            PubSub.unsubscribe(image_loaded);
+        }
+
+        image.load(
+            image_source
+        );
+
+        image_loaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
+            let $image = $(image);
+
+            $image.css({
+                opacity: 0
+            });
+
+            $('.app-slider-image').append($image);
+
+            $image.transition({
+                opacity: 1
+            }, 300, function() {
+                $current_grid_item_image.remove();
+            });
+
+            setupPagination();
+        });
+    });
 }
 
 function load(callback, inverse) {
@@ -126,15 +180,11 @@ function load(callback, inverse) {
     }
 
     image.load(
-        image_source,
-        preloader_target
+        image_source
     );
 }
 
 function handleImageLoaded(images, image, callback, inverse) {
-    // Reset preloader target
-    preloader_target = null;
-
     // Create image container
     $slider_image = $('<div />');
 
@@ -174,9 +224,6 @@ function handleImageLoaded(images, image, callback, inverse) {
         }, 500, 'out', function() {
             // Dispatch event
             PubSub.publish('/tamm/initial/image/faded');
-
-            // Remove preloader text elements
-            $preloader_text.remove();
 
             // Set pagination
             setupPagination();
