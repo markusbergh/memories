@@ -170,8 +170,7 @@ function createGridItemImage($grid_item, index, current_index, thumbnail) {
 
 function scrollToGridItem() {
     $(window).scrollTop(
-        $current_grid_item.offset().top -
-        $current_grid_item.height() / 2
+        $current_grid_item.offset().top - 20
     );
 }
 
