@@ -12,7 +12,7 @@
         opacity: 0;
         font-family: "Playfair Display", Georgia, sans-serif;
         margin-left: 100px;
-        @include font-size(36px);
+        @include font-size(46px);
 
         @media only screen and (max-width: $break-mobile-landscape) {
             margin: 32px 10px 0 0;

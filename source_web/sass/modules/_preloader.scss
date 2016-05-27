@@ -11,6 +11,15 @@
         background: rgba(0, 0, 0, 0.5);
     }
 
+    &.center {
+        display: flex;
+        align-items: center;
+        width: 40%;
+        height: 100%;
+        left: 60%;
+        margin-left: -30%;
+    }
+
     &.hidden {
         height: 0px;
     }
@@ -27,43 +36,15 @@
     width: 0;
     height: 5px;
     background: rgba(255, 255, 255, 0.5);
+    transition: width 0.3s ease-in-out;
 
     &.top {
         background: rgba(255, 255, 255, 1);
     }
-}
 
-.preloader-text {
-    width: auto;
-    height: auto;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    @include transform(translateX(-50%) translateY(-50%));
-
-    .loaded-and-ready & {
-        display: none;
+    .center & {
+        position: static;
+        background: rgba(0, 0, 0, 0.5);
+        height: 30px;
     }
-
-    span {
-        letter-spacing: 0.15em;
-        font-weight: 800;
-        text-transform: uppercase;
-        font-style: normal;
-        @include font-size(64px);
-    }
-}
-
-.preloader-text-item-primary {
-    color: gray;
-}
-
-.preloader-text-item-secondary {
-    color: white;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    width: 0;
-    @include transition(width 300ms ease);
 }

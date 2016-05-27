@@ -117,8 +117,6 @@ function load(callback, inverse) {
     if(typeof callback === 'function') {
         $preloader.removeAttr('style');
         $progress.removeAttr('style');
-    } else if(!is_loaded_from_archive) {
-        setupFullscreenPreloader();
     }
 
     if(mql.matches) {
@@ -131,26 +129,6 @@ function load(callback, inverse) {
         image_source,
         preloader_target
     );
-}
-
-function setupFullscreenPreloader() {
-    $preloader.css({
-        top: 0,
-        bottom: 'auto',
-        height: '100%'
-    });
-
-    $progress.css({
-        top: 0,
-        bottom: 'auto',
-        height: '100%'
-    });
-
-    $preloader_text.css({
-        opacity: 0
-    }).transition({
-        opacity: 1
-    }, 500);
 }
 
 function handleImageLoaded(images, image, callback, inverse) {
@@ -245,6 +223,7 @@ function initialImageLoaded() {
         opacity: 0
     }, 600, function() {
         $preloader.removeAttr('style');
+        $preloader.removeClass('center');
         $preloader.addClass('top');
         $progress.addClass('top');
     });

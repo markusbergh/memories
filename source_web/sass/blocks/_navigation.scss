@@ -20,10 +20,10 @@
     }
 
     &:after {
-        margin: 0 auto -3px;
+        margin: 2px auto -3px;
         display: block;
         width: 0;
-        height: 3px;
+        height: 2px;
         content: "";
         background: white;
         @include transition(width 0.4s cubic-bezier(0.785, 0.135, 0.15, 0.86));
