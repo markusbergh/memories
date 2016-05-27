@@ -1,11 +1,23 @@
 .header {
     position: fixed;
+    width: 100%;
+    top: 50px;
+    z-index: 499;
+    color: #fff;
+
+    @include transition(color 0.5s ease-out);
+
+    &.inverted {
+        color: #000;
+    }
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    height: 200px;
-    z-index: 499;
+    max-width: 2100px;
+    margin: 0 auto;
 }
 
 .logo {
@@ -27,11 +39,13 @@
 
 .years-of-memories {
     z-index: 299;
-    font-weight: 700;
+    font-weight: 400;
+    font-style: italic;
     opacity: 0;
     font-family: "Lato", Arial, sans-serif;
     display: block;
-    @include font-size(16px);
+    margin-top: 2px;
+    @include font-size(20px);
 
     @media only screen and (max-width: $break-mobile-landscape) {
         display: none;
@@ -39,9 +53,8 @@
 }
 
 #grid-toggle {
-    width: 50px;
-    height: 50px;
-    background: red;
-    background-image: linear-gradient(to top, white 2px, transparent 2px), linear-gradient(to left, white 2px, transparent 2px);
-    background-size: 100% 50%, 50% 100%;
+    margin-right: 100px;
+    @include font-size(20px);
+    border: 2px solid #fff;
+    padding: 8px 12px;
 }

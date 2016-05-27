@@ -10,10 +10,25 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    overflow: scroll;
-
-    margin-top: 300px;
+    margin-top: 150px;
     margin-bottom: 300px;
+}
+
+.grid-text {
+    color: #000;
+    margin-top: 300px;
+    max-width: 2100px;
+    margin: 300px auto 0;
+
+    h2 {
+        font-family: "Playfair Display", Georgia, serif;
+        @include font-size(52px);
+    }
+
+    p {
+        font-style: italic;
+        @include font-size(22px);
+    }
 }
 
 .grid-column {

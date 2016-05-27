@@ -10,7 +10,6 @@ import $ from 'jquery';
 
 import PubSub from 'tamm/utils/pubsub';
 import Transition from 'tamm/modules/transition';
-import Section from 'tamm/modules/section';
 import Slider from 'tamm/modules/slider';
 import Nav from 'tamm/modules/nav';
 import Grid from 'tamm/modules/grid';

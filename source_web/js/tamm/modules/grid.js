@@ -13,10 +13,12 @@ import PubSub from 'tamm/utils/pubsub';
 
 let total_images = 0,
     loaded_images = null,
+    $header = $('.header'),
     $current_grid_item = null,
     $current_slider_image = null,
     $current_slider_image_wrapper = null,
     $grid = null,
+    $grid_text = null,
     $grid_container = null,
     $grid_left_column = null,
     $grid_right_column = null;
@@ -40,7 +42,10 @@ function setupEvents() {
 }
 
 function handleGridLoad() {
+    $('body').css('cursor', 'progress');
+
     $grid = $('<div />');
+    $grid_text = $('<div />');
     $grid_container = $('<div />');
     $grid_left_column = $('<div />');
     $grid_right_column = $('<div />');
@@ -49,7 +54,11 @@ function handleGridLoad() {
 }
 
 function handleGridLoadComplete(data) {
+    // Add containers
     addGridContent();
+
+    // Invert colors
+    $header.addClass('inverted');
 
     // Get current image
     $current_slider_image_wrapper = $('.app-slider-image-wrapper');
@@ -77,10 +86,39 @@ function handleGridLoadComplete(data) {
     }
 }
 
+function addGridContent() {
+    $grid_container.addClass('grid-container');
+    $grid.addClass('grid');
+
+    let $title = $('<h2 />').text('These are my memories'),
+        $description = $(`<p>This is where you can see what I see, and what I capture
+                             as a moment in my life. Beautiful thrilling moments.
+                             And these are my memories.</p>
+                             <p>Enjoy.</p>`);
+
+    $grid_container.append(
+        $grid_text.append(
+            $title,
+            $description
+        ).addClass('grid-text'),
+        $grid.append(
+            $grid_left_column.addClass('grid-column grid-column--left'),
+            $grid_right_column.addClass('grid-column grid-column--right')
+        )
+    );
+
+    $main.append($grid_container);
+}
+
 function handleGridItemClick(ev) {
     ev.preventDefault();
 
+    $('body').css('cursor', 'progress');
+
     let $current_grid_item = $(this);
+
+    // Invert colors
+    $header.removeClass('inverted');
 
     PubSub.publish('/tamm/grid/image/load', [{
         id: $current_grid_item.data('id'),
@@ -146,6 +184,8 @@ function animateCurrentFullscreenImage() {
         width: $current_grid_item.width(),
         height: $current_grid_item.height()
     }, 800, 'easeInOutQuint', function() {
+        $('body').css('cursor', 'default');
+
         $current_slider_image.removeAttr('style');
         $current_grid_item.append($current_slider_image);
 
@@ -153,20 +193,6 @@ function animateCurrentFullscreenImage() {
             display: 'none'
         });
     });
-}
-
-function addGridContent() {
-    $grid_container.addClass('grid-container');
-    $grid.addClass('grid');
-
-    $grid_container.append(
-        $grid.append(
-            $grid_left_column.addClass('grid-column grid-column--left'),
-            $grid_right_column.addClass('grid-column grid-column--right')
-        )
-    );
-
-    $main.append($grid_container);
 }
 
 function isVisibleInView(elem) {

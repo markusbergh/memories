@@ -135,6 +135,8 @@ function handleLoadFromArchive(data) {
         image_loaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
             let $image = $(image);
 
+            $('body').css('cursor', 'default');
+
             $image.css({
                 opacity: 0
             });
@@ -147,12 +149,16 @@ function handleLoadFromArchive(data) {
                 $current_grid_item_image.remove();
             });
 
+            PubSub.publish('/tamm/grid/toggle/show');
+
             setupPagination();
         });
     });
 }
 
 function load(callback, inverse) {
+    $('body').css('cursor', 'progress');
+
     if(image_loaded) {
         PubSub.unsubscribe(image_loaded);
     }
@@ -185,6 +191,8 @@ function load(callback, inverse) {
 }
 
 function handleImageLoaded(images, image, callback, inverse) {
+    $('body').css('cursor', 'default');
+
     // Create image container
     $slider_image = $('<div />');
 

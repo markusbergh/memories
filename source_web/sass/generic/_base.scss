@@ -56,25 +56,3 @@ a {
         outline: none;
     }
 }
-
-p {
-    margin: 0 auto;
-    font-weight: 100;
-    font-style: italic;
-    text-align: center;
-    @include font-size(42px);
-}
-
-section {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-section > img {
-    position: absolute;
-    top: 30px;
-    left: 20px;
-    opacity: 0.5;
-}
