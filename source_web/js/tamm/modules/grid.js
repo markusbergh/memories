@@ -104,8 +104,7 @@ function addGridContent() {
         $grid.append(
             $grid_left_column.addClass('grid-column grid-column--left'),
             $grid_right_column.addClass('grid-column grid-column--right')
-        ),
-        $('<p class="grid-contact">Contact me</p>')
+        )
     );
 
     $main.append($grid_container);

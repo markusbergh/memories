@@ -40,6 +40,14 @@
     p {
         @include font-size(22px);
         display: inline-block;
+
+        @media only screen and (max-width: $break-mobile-landscape) {
+            @include font-size(16px);
+        }
+
+        @media only screen and (max-width: $break-tablet) {
+            @include font-size(18px);
+        }
     }
 
     span {
@@ -54,6 +62,10 @@
         }
 
         @include transition(opacity 0.3s ease);
+
+        @media only screen and (max-width: $break-tablet) {
+            line-height: 100px;
+        }
     }
 }
 

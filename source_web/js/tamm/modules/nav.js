@@ -34,18 +34,10 @@ let Navigation = function() {
     function hideGridToggle() {
         $grid_toggle.transition({
             opacity: 0
-        }, 400, function() {
-            $grid_toggle.css({
-                display: 'none'
-            });
-        });
+        }, 400);
     }
 
     function showGridToggle() {
-        $grid_toggle.css({
-            display: 'block'
-        });
-
         $grid_toggle.transition({
             opacity: 1
         }, 400);
@@ -69,6 +61,10 @@ let Navigation = function() {
         $nav_title.css({
             opacity: 0
         });
+
+        $grid_toggle.transition({
+            opacity: 0
+        });
     };
 
     this.showHeaderElements = function() {
@@ -77,6 +73,10 @@ let Navigation = function() {
         }, 500);
 
         $nav_years.transition({
+            opacity: 1
+        }, 500);
+
+        $grid_toggle.transition({
             opacity: 1
         }, 500);
     };

@@ -18,6 +18,10 @@
     align-items: center;
     max-width: 2100px;
     margin: 0 auto;
+
+    @media only screen and (max-width: $break-mobile-landscape) {
+        justify-content: space-around;
+    }
 }
 
 .logo {
@@ -28,12 +32,8 @@
     @include font-size(46px);
 
     @media only screen and (max-width: $break-mobile-landscape) {
-        margin: 32px 10px 0 0;
-        display: inline-block;
-        width: auto;
-        float: right;
-        text-align: right;
-        @include font-size(18px);
+        margin-left: 0;
+        @include font-size(20px);
     }
 }
 
@@ -57,4 +57,9 @@
     @include font-size(20px);
     border: 2px solid #fff;
     padding: 8px 12px;
+
+    @media only screen and (max-width: $break-mobile-landscape) {
+        margin-right: 0;
+        @include font-size(16px);
+    }
 }

@@ -28,21 +28,20 @@
     h2 {
         font-family: "Playfair Display", Georgia, serif;
         @include font-size(58px);
+
+        @media only screen and (max-width: $break-tablet) {
+            @include font-size(34px);
+        }
     }
 
     p {
         font-style: italic;
         @include font-size(22px);
-    }
-}
 
-.grid-contact {
-    margin-left: 100px;
-    margin-bottom: 200px;
-    font-style: italic;
-    color: #000;
-    font-family: "Playfair Display", Georgia, serif;
-    @include font-size(32px);
+        @media only screen and (max-width: $break-tablet) {
+            @include font-size(20px);
+        }
+    }
 }
 
 .grid-column {
