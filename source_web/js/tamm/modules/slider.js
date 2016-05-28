@@ -149,6 +149,15 @@ function handleLoadFromArchive(data) {
                 $current_grid_item_image.remove();
             });
 
+            // Set caption text and show it
+            $slider_caption.removeClass('hidden');
+            $slider_caption.text(images[current_index].caption);
+            $slider_caption.transition({
+                opacity: 1
+            }, 300, function() {
+                $slider_caption.removeAttr('style');
+            });
+
             PubSub.publish('/tamm/grid/toggle/show');
 
             setupPagination();

@@ -32,8 +32,12 @@ let Navigation = function() {
     }
 
     function hideGridToggle() {
-        $grid_toggle.css({
-            display: 'none'
+        $grid_toggle.transition({
+            opacity: 0
+        }, 400, function() {
+            $grid_toggle.css({
+                display: 'none'
+            });
         });
     }
 
@@ -41,6 +45,10 @@ let Navigation = function() {
         $grid_toggle.css({
             display: 'block'
         });
+
+        $grid_toggle.transition({
+            opacity: 1
+        }, 400);
     }
 
     function handleGridToggleClick(ev) {
