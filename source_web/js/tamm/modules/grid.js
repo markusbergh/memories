@@ -84,6 +84,8 @@ function handleGridLoadComplete(data) {
             createGridItem(item, num_index, current_index);
         }
     }
+
+    history.pushState({}, '', '/photos/archive');
 }
 
 function addGridContent() {
