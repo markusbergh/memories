@@ -270,7 +270,9 @@ function updateSliderCaptionWithTransition(caption, inverse) {
         }).transition({
             opacity: 1,
             rotateY: 0
-        }, 300, 'in-out');
+        }, 300, 'in-out', function() {
+            $slider_caption.removeAttr('style');
+        });
     });
 }
 

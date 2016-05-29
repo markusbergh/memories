@@ -34,10 +34,16 @@ let Navigation = function() {
     function hideGridToggle() {
         $grid_toggle.transition({
             opacity: 0
-        }, 400);
+        }, 400, function() {
+            $grid_toggle.css({
+                'pointer-events': 'none'
+            });
+        });
     }
 
     function showGridToggle() {
+        $grid_toggle.removeAttr('style');
+
         $grid_toggle.transition({
             opacity: 1
         }, 400);
