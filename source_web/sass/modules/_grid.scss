@@ -33,6 +33,11 @@
     h2 {
         font-family: "Playfair Display", Georgia, serif;
         @include font-size(58px);
+        margin-left: 100px;
+
+        @media only screen and (max-width: $break-large) {
+            margin-left: auto;
+        }
 
         @media only screen and (max-width: $break-tablet) {
             @include font-size(34px);
@@ -46,7 +51,12 @@
     p {
         font-style: italic;
         font-weight: 300;
+        margin-left: 100px;
         @include font-size(22px);
+
+        @media only screen and (max-width: $break-large) {
+            margin-left: auto;
+        }
 
         @media only screen and (max-width: $break-tablet) {
             @include font-size(20px);
