@@ -75,7 +75,7 @@ let App = function() {
     }
 
     function createSlider() {
-        Slider({ supportsTouch: support_touch });
+        Slider({ supports_touch: support_touch });
     }
 
     function createNavigation() {
