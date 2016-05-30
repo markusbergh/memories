@@ -58,7 +58,7 @@
         font-weight: 400;
 
         &.hidden {
-            opacity: 0;
+            display: none;
         }
 
         @include transition(opacity 0.3s ease);

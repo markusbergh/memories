@@ -333,7 +333,11 @@ function hidePagination() {
 }
 
 function hideCaption() {
-    $slider_caption.addClass('hidden');
+    $slider_caption.transition({
+        opacity: 0
+    }, 300, function() {
+        $slider_caption.addClass('hidden');
+    });
 }
 
 function setupKeyboard() {
