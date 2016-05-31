@@ -11,13 +11,10 @@ import 'jquery.transit';
 
 import PubSub from 'tamm/utils/pubsub';
 
-let $preloader = $('.preloader-wrapper');
+const $progress = $('.progress'),
+      $preloader = $('.preloader-wrapper');
 
 let Preloader = function() {
-    let $progress = $('.progress');
-
-    this.$preloader = $preloader;
-
     function init() {
         addEvents();
     }
@@ -49,15 +46,19 @@ let Preloader = function() {
     function hide(imageLoaded) {
         $progress.transition({
             width: '100%'
-        }, 300, () => {
-            $preloader.addClass('hidden');
-
-            $progress.css({
-                width: 0
-            });
-
-            PubSub.publish('/tamm/image/loaded', [imageLoaded], self);
+        }, 300, function() {
+            hidePreloaderComplete(imageLoaded);
         }).removeClass('running');
+    }
+
+    function hidePreloaderComplete(imageLoaded) {
+        $preloader.addClass('hidden');
+
+        $progress.css({
+            width: 0
+        });
+
+        PubSub.publish('/tamm/image/loaded', [imageLoaded]);
     }
 
     function show() {

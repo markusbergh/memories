@@ -12,8 +12,7 @@ import 'jquery.transit';
 import PubSub from 'tamm/utils/pubsub';
 
 let total_images = 0,
-    loaded_images = null,
-    $header = $('.header'),
+    loaded_images = 0,
     $current_grid_item = null,
     $current_slider_image = null,
     $current_slider_image_wrapper = null,
@@ -27,7 +26,9 @@ const PATH_DATA = '/data/memories.json',
       EVENTS = {
           LOAD: '/tamm/grid/load'
       },
-      $main = $('main');
+      $main = $('main'),
+      $header = $('.header'),
+      $body = $('body');
 
 let Grid = function() {
     function init() {
@@ -42,7 +43,7 @@ function setupEvents() {
 }
 
 function handleGridLoad() {
-    $('body').css('cursor', 'progress');
+    setCursorProgress();
 
     $grid = $('<div />');
     $grid_text = $('<div />');
@@ -89,9 +90,6 @@ function handleGridLoadComplete(data) {
 }
 
 function addGridContent() {
-    $grid_container.addClass('grid-container');
-    $grid.addClass('grid');
-
     let $title = $('<h2 />').text('These are my memories'),
         $description = $(`<p>This is where you can see what I see, and what I capture
                              as a moment in my life. Beautiful thrilling moments.
@@ -106,8 +104,8 @@ function addGridContent() {
         $grid.append(
             $grid_left_column.addClass('grid-column grid-column--left'),
             $grid_right_column.addClass('grid-column grid-column--right')
-        )
-    );
+        ).addClass('grid')
+    ).addClass('grid-container');
 
     $main.append($grid_container);
 }
@@ -115,16 +113,16 @@ function addGridContent() {
 function handleGridItemClick(ev) {
     ev.preventDefault();
 
-    $('body').css('cursor', 'progress');
+    let $current_target_grid_item = $(this);
 
-    let $current_grid_item = $(this);
+    setCursorProgress();
 
     // Invert colors
     $header.removeClass('inverted');
 
     PubSub.publish('/tamm/grid/image/load', [{
-        id: $current_grid_item.data('id'),
-        target: $current_grid_item
+        id: $current_target_grid_item.data('id'),
+        target: $current_target_grid_item
     }]);
 }
 
@@ -184,16 +182,26 @@ function animateCurrentFullscreenImage() {
         y: $current_grid_item.offset().top - $(window).scrollTop(),
         width: $current_grid_item.width(),
         height: $current_grid_item.height()
-    }, 800, 'easeInOutQuint', function() {
-        $('body').css('cursor', 'default');
+    }, 800, 'easeInOutQuint', handleAnimateCurrentFullscreenImageComplete);
+}
 
-        $current_slider_image.removeAttr('style');
-        $current_grid_item.append($current_slider_image);
+function handleAnimateCurrentFullscreenImageComplete() {
+    setCursorDefault();
 
-        $current_slider_image_wrapper.css({
-            display: 'none'
-        });
+    $current_slider_image.removeAttr('style');
+    $current_grid_item.append($current_slider_image);
+
+    $current_slider_image_wrapper.css({
+        display: 'none'
     });
+}
+
+function setCursorProgress() {
+    $body.css('cursor', 'progress');
+}
+
+function setCursorDefault() {
+    $body.css('cursor', 'default');
 }
 
 function isVisibleInView(elem) {

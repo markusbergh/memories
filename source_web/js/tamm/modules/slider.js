@@ -19,10 +19,13 @@ let $slider_action_next_svg = null,
     $slider_action_prev_svg = null,
     $slider_action_prev_paper = null,
     $slider_image = null,
+    $grid_container = null,
+    $current_grid_item_image = null,
     supports_touch = false,
     current_index = 0,
-    num_images = null,
-    image_loaded = null,
+    current_target = null,
+    total_images = 0,
+    image_loaded_event = null,
     has_animated_pagination_next = false,
     has_animated_pagination_prev = false,
     image = new Image();
@@ -34,25 +37,21 @@ const $slider = $('.app-slider'),
       $slider_action_prev = $('.app-slider-action.prev'),
       $slider_caption = $('.app-slider-caption-text span'),
       $preloader = $('.preloader-wrapper'),
-      $progress = $('.progress');
+      $progress = $('.progress'),
+      $body = $('body'),
+      $html = $('html');
 
 let Slider = function(options) {
     supports_touch = options.supports_touch;
 
     function init() {
-        /**
-        * Get url and load correct image
-        */
+        // Get url and load correct image
         getURL();
 
-        /**
-        * Add event to action links
-        */
+        // Add event to action links
         setupEvents();
 
-        /**
-        * Vector arrows
-        */
+        // Vector arrows
         loadSVG();
     }
 
@@ -82,15 +81,23 @@ function getURL() {
         current_index = parseInt(last_part, 10) - 1;
     }
 
-    // Load image
+    // And then load the image
     load();
 }
 
 function handleLoadFromArchive(data) {
-    current_index = parseInt(data.id, 10);
+    // Get grid
+    $grid_container = $('.grid-container');
 
-    let $current_grid_item = data.target,
-        $current_grid_item_image = $current_grid_item.find('img'),
+    // Get index of image
+    current_index = parseInt(data.id, 10);
+    current_target = data.target;
+
+    animateThumbImageFromGrid(current_target);
+}
+
+function animateThumbImageFromGrid(target) {
+    let $current_grid_item = target,
         $current_slider_image_wrapper = $('.app-slider-image-wrapper'),
         current_width = $current_grid_item.width(),
         current_height = $current_grid_item.height(),
@@ -98,11 +105,13 @@ function handleLoadFromArchive(data) {
         top_pos = $current_grid_item.offset().top -
                   $current_slider_image_wrapper.offset().top;
 
+    $current_grid_item_image = $current_grid_item.find('img');
+
     $current_slider_image_wrapper.css({
         display: 'block'
     });
 
-    $('.app-slider-image').append(
+    $slider_image.append(
         $current_grid_item_image.css({
             width: current_width,
             height: current_height,
@@ -119,57 +128,64 @@ function handleLoadFromArchive(data) {
         width: '100%',
         height: '100%'
     }, 800, 'easeInOutQuint', function() {
-        $('.grid-container').remove();
-
         let images = Model.data,
-            image_source = images[data.id].image;
+            image_source = images[current_index].image,
+            image_caption = images[current_index].caption;
 
-        if(image_loaded) {
-            PubSub.unsubscribe(image_loaded);
-        }
-
-        image.load(
-            image_source
-        );
-
-        image_loaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
-            let $image = $(image);
-
-            $('body').css('cursor', 'default');
-
-            $image.css({
-                opacity: 0
-            });
-
-            $('.app-slider-image').append($image);
-
-            $image.transition({
-                opacity: 1
-            }, 300, function() {
-                $current_grid_item_image.remove();
-            });
-
-            // Set caption text and show it
-            $slider_caption.removeClass('hidden');
-            $slider_caption.text(images[current_index].caption);
-            $slider_caption.transition({
-                opacity: 1
-            }, 300, function() {
-                $slider_caption.removeAttr('style');
-            });
-
-            PubSub.publish('/tamm/grid/toggle/show');
-
-            setupPagination();
-        });
+        handleAnimateThumbImageFromGridComplete(image_source, image_caption);
     });
 }
 
-function load(callback, inverse) {
-    $('body').css('cursor', 'progress');
+function handleAnimateThumbImageFromGridComplete(image_source, image_caption) {
+    $grid_container.remove();
 
-    if(image_loaded) {
-        PubSub.unsubscribe(image_loaded);
+    // Clear any previous event listener
+    if(image_loaded_event) {
+        PubSub.unsubscribe(image_loaded_event);
+    }
+
+    // Load fullscreen image
+    image.load(
+        image_source
+    );
+
+    image_loaded_event = PubSub.subscribe('/tamm/image/loaded', function(image_loaded) {
+        handleImageLoadedFromGrid(image_loaded, image_caption);
+    });
+}
+
+function handleImageLoadedFromGrid(image_loaded, image_caption) {
+    let $image = $(image_loaded);
+
+    setCursorDefault();
+
+    $slider_image.append($image);
+
+    $image.css({
+        opacity: 0
+    });
+
+    $image.transition({
+        opacity: 1
+    }, 300, function() {
+        $current_grid_item_image.remove();
+    });
+
+    // Set caption text and show it
+    updateSliderCaption(image_caption);
+
+    // Handle pagination
+    setupPagination();
+
+    // Show toggle for archive
+    PubSub.publish('/tamm/grid/toggle/show');
+}
+
+function load(callback, inverse) {
+    setCursorProgress();
+
+    if(image_loaded_event) {
+        PubSub.unsubscribe(image_loaded_event);
     }
 
     let images = Model.data,
@@ -177,10 +193,10 @@ function load(callback, inverse) {
         mql = window.matchMedia('screen and (max-width: 765px)'),
         image_source = null;
 
-    num_images = Object.keys(images).length;
+    total_images = Object.keys(images).length;
 
-    image_loaded = PubSub.subscribe('/tamm/image/loaded', function(image) {
-        handleImageLoaded(images, image, callback, inverse)
+    image_loaded_event = PubSub.subscribe('/tamm/image/loaded', function(image_loaded) {
+        handleImageLoaded(images, image_loaded, callback, inverse);
     });
 
     if(typeof callback === 'function') {
@@ -199,42 +215,24 @@ function load(callback, inverse) {
     );
 }
 
-function handleImageLoaded(images, image, callback, inverse) {
-    $('body').css('cursor', 'default');
+function handleImageLoaded(images, image_loaded, callback, inverse) {
+    setCursorDefault();
 
     // Create image container
     $slider_image = $('<div />');
-
-    if(typeof callback !== 'function') {
-        initialImageLoaded();
-    } else {
-        // Style for paginating images
-        $slider_image.css({
-            x: inverse ? '-100%' : '100%',
-            perspective: 1500,
-            rotateY: inverse ? -25 : 25,
-            scale: 0.5
-        });
-    }
 
     // Add image to slider
     $slider.append(
         $slider_image_wrapper.append(
             $slider_image.append(
-                image
+                image_loaded
             ).addClass('app-slider-image')
         )
     );
 
-    // If call was passed
-    if(typeof callback === 'function') {
-        // Update caption text while pagination
-        updateSliderCaptionWithTransition(images[current_index].caption, inverse);
+    if(typeof callback !== 'function') {
+        initialImageLoaded();
 
-        // Invoke callback
-        callback.apply();
-    } else {
-        // Otherwise just fade in
         $slider_image.transition({
             opacity: 1,
             scale: 1
@@ -246,15 +244,33 @@ function handleImageLoaded(images, image, callback, inverse) {
             setupPagination();
 
             // Set caption text and show it
-            $slider_caption.removeClass('hidden');
-            $slider_caption.text(images[current_index].caption);
-            $slider_caption.transition({
-                opacity: 1
-            }, 300, function() {
-                $slider_caption.removeAttr('style');
-            });
+            updateSliderCaption(images[current_index].caption);
         });
+    } else {
+        // Style for paginating images
+        $slider_image.css({
+            x: inverse ? '-100%' : '100%',
+            perspective: 1500,
+            rotateY: inverse ? -25 : 25,
+            scale: 0.5
+        });
+
+        // Update caption text while pagination
+        updateSliderCaptionWithTransition(images[current_index].caption, inverse);
+
+        // Invoke callback
+        callback.apply();
     }
+}
+
+function updateSliderCaption(image_caption) {
+    $slider_caption.removeClass('hidden');
+    $slider_caption.text(image_caption);
+    $slider_caption.transition({
+        opacity: 1
+    }, 300, function() {
+        $slider_caption.removeAttr('style');
+    });
 }
 
 function updateSliderCaptionWithTransition(caption, inverse) {
@@ -295,7 +311,7 @@ function initialImageLoaded() {
     });
 
     // Set class
-    $('html').addClass('loaded-and-ready');
+    $html.addClass('loaded-and-ready');
 }
 
 function setupPagination() {
@@ -312,7 +328,7 @@ function setupPagination() {
     }
 
     // Some logic with next button
-    if(current_index + 1 === num_images) {
+    if(current_index + 1 === total_images) {
         $slider_action_next.addClass('hidden');
         has_animated_pagination_next = false;
     } else {
@@ -341,7 +357,7 @@ function hideCaption() {
 }
 
 function setupKeyboard() {
-    $('body').keydown(handleKeyDown);
+    $body.keydown(handleKeyDown);
 }
 
 function handleKeyDown(ev) {
@@ -352,7 +368,7 @@ function handleKeyDown(ev) {
                 goPrev();
             }
         } else if(ev.keyCode === 39) {
-            if(current_index + 1 < num_images) {
+            if(current_index + 1 < total_images) {
                 goNext();
             }
         }
@@ -373,7 +389,7 @@ function handleSliderActionClick(ev) {
             if(current_index > 0) {
                 goPrev();
             }
-        } else if(current_index + 1 < num_images) {
+        } else if(current_index + 1 < total_images) {
             goNext();
         }
 
@@ -517,6 +533,14 @@ function animateInPrevNavigation() {
             fill: '#fff'
         }, 300);
     });
+}
+
+function setCursorProgress() {
+    $body.css('cursor', 'progress');
+}
+
+function setCursorDefault() {
+    $body.css('cursor', 'default');
 }
 
 export default Slider;

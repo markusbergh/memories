@@ -11,8 +11,6 @@ import App from 'tamm/app';
 
 $(() => {
     // Defaults z-index
-    window.Z_INDEX_NAV_TOGGLE = 699;
-    window.Z_INDEX_SECTION = 599;
     window.Z_INDEX_TRANSITION = 499;
 
     // Kick in application

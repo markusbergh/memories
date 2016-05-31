@@ -12,9 +12,9 @@ import 'jquery.transit';
 import PubSub from 'tamm/utils/pubsub';
 
 let Navigation = function() {
-    let $nav_title = $('.logo'),
-        $nav_years = $('.years-of-memories'),
-        $grid_toggle = $('#grid-toggle');
+    const $nav_title = $('.logo'),
+          $nav_years = $('.years-of-memories'),
+          $grid_toggle = $('#grid-toggle');
 
     function init() {
         addEvents();
@@ -34,10 +34,12 @@ let Navigation = function() {
     function hideGridToggle() {
         $grid_toggle.transition({
             opacity: 0
-        }, 400, function() {
-            $grid_toggle.css({
-                'pointer-events': 'none'
-            });
+        }, 400, handleHideGridToggleComplete);
+    }
+
+    function handleHideGridToggleComplete() {
+        $grid_toggle.css({
+            'pointer-events': 'none'
         });
     }
 
@@ -52,9 +54,13 @@ let Navigation = function() {
     function handleGridToggleClick(ev) {
         ev.preventDefault();
 
+        // Hide itself
         hideGridToggle();
 
+        // Load the grid
         PubSub.publish('/tamm/grid/load');
+
+        // Hide slider elements
         PubSub.publish('/tamm/slider/caption/hide');
         PubSub.publish('/tamm/slider/pagination/hide');
     }

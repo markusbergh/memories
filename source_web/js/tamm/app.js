@@ -23,7 +23,7 @@ let App = function() {
         navigation = null,
         support_touch = false;
 
-    function orientationChanged() {
+    function handleOrientationChanged() {
         switch(window.orientation) {
             case -90:
             case 90:
@@ -39,7 +39,7 @@ let App = function() {
         addCustomEvents();
 
         // Orientation
-        window.addEventListener('orientationchange', orientationChanged);
+        window.addEventListener('orientationchange', handleOrientationChanged);
     }
 
     function addCustomEvents() {
@@ -58,11 +58,6 @@ let App = function() {
             transition.hide();
         });
 
-        // Listen for section create
-        PubSub.subscribe('/tamm/section/create', function(s) {
-            section = new Section({ section: s });
-        });
-
         // Listen for section show
         PubSub.subscribe('/tamm/section/show', function() {
             section.show();
@@ -75,7 +70,9 @@ let App = function() {
     }
 
     function createSlider() {
-        Slider({ supports_touch: support_touch });
+        Slider({
+            supports_touch: support_touch
+        });
     }
 
     function createNavigation() {
@@ -97,6 +94,7 @@ let App = function() {
     }
 
     function init() {
+        // Decide whether touch or not
         checkTouchSupport();
 
         // Get application data

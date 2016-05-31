@@ -77,18 +77,7 @@ let SlideImage = function() {
         image.src = 'data:image/jpeg;base64,' + base64Encode(request.responseText);
     };
 
-    this.load = function(imageURI, _target) {
-        let current_target = _target || null;
-
-        if(current_target) {
-            preloader.$preloader.appendTo(current_target);
-        } else if(current_target === null &&
-                  !preloader.$preloader.parent().is('body')) {
-            $('#transition').before(
-                preloader.$preloader
-            );
-        }
-
+    this.load = function(imageURI) {
         request = new XMLHttpRequest();
         request.onloadstart = onStart;
         request.onprogress = onProgress;
