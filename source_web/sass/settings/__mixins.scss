@@ -1,7 +1,3 @@
-/*
-* These are my memories mixins
-*/
-
 // Font face
 @mixin declare-font-face($family, $src, $weight: normal, $style: normal) {
     @font-face {
